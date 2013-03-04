@@ -25,11 +25,6 @@ class item extends SimplePie_Item {
   
   public function add($feed){
     if(!$this->exists()){
-      if($feed['page']==""){
-        $page = 1;
-      }else{
-        $page = $feed['page'];
-      }
       $date = $item->get_date("Y-m-d H:i:s");
       if($date == "0000-00-00 00:00:00"){
         $date = date("Y-m-d H:i:s");
