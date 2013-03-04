@@ -18,19 +18,9 @@ class feed extends SimplePie_Source {
       }else {
         return true;
       }
-    }
+  }
 
-    public function get_all(){
-      $query = "SELECT * FROM feed ORDER BY title";
-      $result = mysql_query($query) or print('Query failed: ' . mysql_error());
-      $feeds = array();
-      while($feed = mysql_fetch_array($result)){
-        $feeds[$feed["id"]] = $feed;
-      }
-      return $feeds;
-    }
-
-    public function add(){
+  public function add(){
       if(!$this->exists()){
        $query = "INSERT INTO `feed` (`id`, `title`,  `url` ) VALUES ( NULL , '".$this->title."', '".$this->url."');";
        $result = mysql_query($query) or print('Query failed: ' . mysql_error());
@@ -38,14 +28,14 @@ class feed extends SimplePie_Source {
      }else{
        return 0;
      }
-    }
+  }
 
-    public function update(){ 
+  public function update(){ 
        $query = "UPDATE  `feed` SET `title` = '".$this->title."',  `url`  =  '".$this->url."' WHERE `id` = '".$feed->id."';";
        print_r($query);
        $result = mysql_query($query) or print('Query failed: ' . mysql_error());
        return 1;   
-     }
+  }
 
   public function refresh(){
        $items = array();
@@ -68,4 +58,45 @@ class feed extends SimplePie_Source {
 
        return $counter;
      }
+  
+  
+  // Feed Meta Actions
+    
+  // Check wether one Meta-Data-set exists  
+  public function exists_meta($user, $meta_key, $meta_value){
+    
+  }  
+  
+  // Add Meta Data-Set
+  public function add_meta($user, $meta_key, $meta_value){
+    
+  }
+  
+  // Delete Meta Data-Set
+  public function delete_meta($meta_id){
+    
+  }
+    
+  // Load ALL Meta-Data of one Feed, nomatter which user they belong to
+  public function load_all_meta(){
+    
+  }
+  
+  // Load all Meta-Data of one Feed, that belong to one User
+  public function load_users_meta($user){
+    
+  }
+  
+  // Add a feed to a page (feed_meta_action);   
+  public function set_page($user, $page_name){
+    
+  }
+  
+  // Remove a feed from a page (feed_meta_action);   
+  public function remove_page($user, $page_name){
+    
+  }
+  
+  
+  
 }

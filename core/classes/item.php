@@ -37,4 +37,32 @@ class item extends SimplePie_Item {
     }
   }
   
+  // Item Meta Actions
+    
+  // Check wether one Meta-Data-set exists  
+  public function exists_meta($user, $meta_key, $meta_value){
+    
+  }  
+  
+  // Add Meta Data-Set
+  public function add_meta($user, $meta_key, $meta_value){
+    
+  }
+  
+  // Delete Meta Data-Set
+  public function delete_meta($meta_id){
+    
+  }
+    
+  // Load ALL Meta-Data of one Item, no matter which user they belong to
+  public function load_all_meta(){
+    
+  }
+  
+  // Load all Meta-Data of one Item, that belong to one User
+  public function load_users_meta($user){
+  
+  }
+  
+  
 }

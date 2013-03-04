@@ -6,6 +6,16 @@ class chiron {
 	public $storage;
 	
 	
+	public function feeds_get_all(){
+    $query = "SELECT * FROM feed ORDER BY title";
+    $result = mysql_query($query) or print('Query failed: ' . mysql_error());
+    $feeds = array();
+    while($feed = mysql_fetch_array($result)){
+      $this->feeds[$feed["id"]] = $feed;
+    }
+    return $feeds;
+  }
+	
 	public function items_get_latest($limit=10){
     if(isset($this->feeds[0]) and $this->feeds[0]!=""){
       $query = "SELECT * FROM item WHERE ";
