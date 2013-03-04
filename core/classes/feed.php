@@ -1,14 +1,14 @@
 <?php 
 
 class feed extends SimplePie_Source {
-  	public $id;
-    public $title;
-    public $url;
-    public $type;
-    public $feed_meta;
+  public $id;
+  public $title;
+  public $url;
+  public $type;
+  public $feed_meta;
 
 
-    function exists(){ 
+  public function exists(){ 
       global $db;
       $query = "SELECT count(url) FROM feed WHERE url='".$this->url."'";
       $result = mysql_query($query) or print('Query failed: ' . mysql_error());
@@ -20,7 +20,7 @@ class feed extends SimplePie_Source {
       }
     }
 
-    function get_all(){
+    public function get_all(){
       $query = "SELECT * FROM feed ORDER BY title";
       $result = mysql_query($query) or print('Query failed: ' . mysql_error());
       $feeds = array();
@@ -30,7 +30,7 @@ class feed extends SimplePie_Source {
       return $feeds;
     }
 
-    function add(){
+    public function add(){
       if(!$this->exists()){
        $query = "INSERT INTO `feed` (`id`, `title`,  `url` ) VALUES ( NULL , '".$this->title."', '".$this->url."');";
        $result = mysql_query($query) or print('Query failed: ' . mysql_error());
@@ -40,14 +40,14 @@ class feed extends SimplePie_Source {
      }
     }
 
-    function update(){ 
+    public function update(){ 
        $query = "UPDATE  `feed` SET `title` = '".$this->title."',  `url`  =  '".$this->url."' WHERE `id` = '".$feed->id."';";
        print_r($query);
        $result = mysql_query($query) or print('Query failed: ' . mysql_error());
        return 1;   
      }
 
-     function refresh(){
+  public function refresh(){
        $items = array();
 
 

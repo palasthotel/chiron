@@ -6,7 +6,7 @@ class chiron {
 	public $storage;
 	
 	
-	function items_get_latest($limit=10){
+	public function items_get_latest($limit=10){
     if(isset($this->feeds[0]) and $this->feeds[0]!=""){
       $query = "SELECT * FROM item WHERE ";
       foreach($this->feeds as $source){
@@ -28,7 +28,7 @@ class chiron {
     return count($items);
   }
 
-  function items_get_by_day($day){
+  public function items_get_by_day($day){
     $query = "SELECT * FROM item WHERE date >= '$day 00:00:00' AND date <= '$day 23:59:59'";
     $result = mysql_query($query) or print('Query failed: ' . mysql_error());   
     while($item = mysql_fetch_array($result)){      

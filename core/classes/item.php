@@ -11,7 +11,7 @@ class item extends SimplePie_Item {
   public $image;
   public $item_meta;
   
-  function exists(){ 
+  public function exists(){ 
     global $db;
     $query = "SELECT count(url) FROM item WHERE url='".mysql_real_escape_string($this->get_permalink())."'";  
     $result = mysql_query($query);
@@ -23,7 +23,7 @@ class item extends SimplePie_Item {
     }
   }
   
-  function add($feed){
+  public function add($feed){
     if(!$this->exists()){
       if($feed['page']==""){
         $page = 1;
