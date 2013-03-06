@@ -58,7 +58,16 @@ class chiron {
     return count($this->items);
   }
   
-  
+  public function items_get_by_feed($feed, $feeds){
+    $query = "SELECT * FROM item WHERE source = '".$feed."' ORDER BY date DESC LIMIT 20";
+    $result = mysql_query($query) or print('Query failed: ' . mysql_error());   
+    //print_r($pages);
+    while($item = mysql_fetch_array($result)){
+      $items[] = $item;
+    }
+    return $items;
+  }
+
   
   	
 }
