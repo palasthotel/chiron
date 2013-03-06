@@ -8,8 +8,8 @@ class chiron {
 	
 	
 	public function __construct() {
-         $this->db = mysql_connect(DB_SRV, DB_USR, DB_PWD);
-         mysql_select_db(DB_DBS) or die('Could not select database');
+    $this->db = mysql_connect(DB_SRV, DB_USR, DB_PWD);
+    mysql_select_db(DB_DBS) or die('Could not select database');
   }
 	
 	
@@ -20,7 +20,7 @@ class chiron {
     while($feed = mysql_fetch_array($result)){
       $this->feeds[$feed["id"]] = $feed;
     }
-    return $feeds;
+    return count($this->feeds);
   }
 	
 	public function items_get_latest($limit=10){
@@ -56,5 +56,9 @@ class chiron {
       $this->items[] = $object;
     }
     return count($this->items);
-  }	
+  }
+  
+  
+  
+  	
 }
