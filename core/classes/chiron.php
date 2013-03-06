@@ -1,9 +1,16 @@
 <?php
 
 class chiron {
+  public $db;
   public $feeds;
   public $items;
 	public $storage;
+	
+	
+	public function __construct() {
+         $this->db = mysql_connect(DB_SRV, DB_USR, DB_PWD);
+         mysql_select_db(DB_DBS) or die('Could not select database');
+  }
 	
 	
 	public function feeds_get_all(){
@@ -32,7 +39,7 @@ class chiron {
     if($query !=""){
       $result = mysql_query($query) or print('Query failed: ' . mysql_error());   
       while($item = mysql_fetch_array($result)){
-        $objects = new $item();
+        $object = new item();
         $object->load($item);
         $this->items[] = $object;
       }
@@ -43,9 +50,11 @@ class chiron {
   public function items_get_by_day($day){
     $query = "SELECT * FROM item WHERE date >= '$day 00:00:00' AND date <= '$day 23:59:59'";
     $result = mysql_query($query) or print('Query failed: ' . mysql_error());   
-    while($item = mysql_fetch_array($result)){      
-      $this->items[] = $item;
+    while($item = mysql_fetch_array($result)){
+      $object = new item('', array());
+      $object->load($item);      
+      $this->items[] = $object;
     }
-    return count($items);
+    return count($this->items);
   }	
 }
