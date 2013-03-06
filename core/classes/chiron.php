@@ -32,7 +32,9 @@ class chiron {
     if($query !=""){
       $result = mysql_query($query) or print('Query failed: ' . mysql_error());   
       while($item = mysql_fetch_array($result)){
-        $this->items[] = $item;
+        $objects = new $item();
+        $object->load($item);
+        $this->items[] = $object;
       }
     }
     return count($items);

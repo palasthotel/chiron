@@ -11,6 +11,17 @@ class item extends SimplePie_Item {
   public $image;
   public $item_meta;
   
+  public function load($array){
+    $this->id = $array['id'];
+    $this->source = $array['source'];
+    $this->date = $array['date'];
+    $this->title = $array['title'];
+    $this->text = $array['text'];
+    $this->url = $array['url'];
+    $this->image = $array['image'];
+    $this->item_meta = array();    
+  }
+  
   public function exists(){ 
     global $db;
     $query = "SELECT count(url) FROM item WHERE url='".mysql_real_escape_string($this->get_permalink())."'";  
@@ -36,6 +47,8 @@ class item extends SimplePie_Item {
       return 0;
     }
   }
+  
+  
   
   // Item Meta Actions
     
