@@ -1,7 +1,7 @@
 <?php 
 
 
-class item extends SimplePie_Item {
+class item {
   public $id;
   public $source;
   public $date;
@@ -21,10 +21,17 @@ class item extends SimplePie_Item {
     $this->image = $array['image'];
     $this->item_meta = array();    
   }
+
+  public function fill($item) {
+    $this->date=$item->get_date("Y-m-d H:i:s");
+    $this->title=$item->get_title();
+    $this->text=$item->get_content();
+    $this->url=$item->get_permalink();
+  }
   
   public function exists(){ 
     global $db;
-    $query = "SELECT count(url) FROM item WHERE url='".mysql_real_escape_string($this->get_permalink())."'";  
+    $query = "SELECT count(url) FROM item WHERE url='".mysql_real_escape_string($this->url)."'";  
     $result = mysql_query($query);
     $return = mysql_fetch_array($result);
     if($return[0]==0){
@@ -34,13 +41,13 @@ class item extends SimplePie_Item {
     }
   }
   
-  public function add($feed){
+  public function add(){
     if(!$this->exists()){
-      $date = $item->get_date("Y-m-d H:i:s");
+      $date = $this->date;
       if($date == "0000-00-00 00:00:00"){
         $date = date("Y-m-d H:i:s");
       }
-      $query = "INSERT INTO `item` (`id` , `source` ,  `date` , `title` ,  `text` ,  `url` ) VALUES ( NULL , '".$feed->id."', '".$date."', '".addslashes($this->get_title())."', '".addslashes($this->get_content())."', '".mysql_real_escape_string($this->get_permalink())."' );";
+      $query = "INSERT INTO `item` (`id` , `source` ,  `date` , `title` ,  `text` ,  `url` ) VALUES ( NULL , '".$this->source."', '".$date."', '".addslashes($this->title)."', '".addslashes($this->text)."', '".mysql_real_escape_string($this->url)."' );";
       $result = mysql_query($query) or print('Query failed: ' . mysql_error()); 
       return 1;   
     }else{

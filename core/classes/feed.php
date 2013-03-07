@@ -1,12 +1,20 @@
 <?php 
 
-class feed extends SimplePie_Source {
+class feed {
   public $id;
   public $title;
   public $url;
   public $type;
+  public $last_updated;
   public $feed_meta;
 
+  public function load($array) {
+    $this->id=$array['id'];
+    $this->title=$array['title'];
+    $this->url=$array['url'];
+    $this->type=$array['type'];
+    $this->last_updated=$array['last_updated'];
+  }
 
   public function exists(){ 
       global $db;
@@ -47,15 +55,18 @@ class feed extends SimplePie_Source {
        $feed->handle_content_type();
 
        foreach ($feed->get_items() as $item){
-         $item->source = $this->id;
          $items[] = $item;
        }
 
        $counter = 0;
        foreach($items as $item){
-          $counter += $item->add();      
+          $converted=new item();
+          $converted->fill($item);
+          $converted->source=$this->id;
+          $counter += $converted->add();      
        }
-
+       $query="UPDATE feed set last_updated=NOW() where id=".$this->id;
+       mysql_query($query) or print("Query failed: ".mysql_error());
        return $counter;
      }
   

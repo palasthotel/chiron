@@ -68,6 +68,16 @@ class chiron {
     return $items;
   }
 
+  public function perform_cron() {
+    $query = "SELECT * FROM feed ORDER BY last_updated ASC limit ".FEEDS_PER_CRON.";";
+    $result = mysql_query($query) or print('Query failed: '.mysql_error());
+    while($item = mysql_fetch_array($result)) {
+      $feed=new feed();
+      $feed->load($item);
+      $feed->refresh();
+    }
+  }
+
   
   	
 }
