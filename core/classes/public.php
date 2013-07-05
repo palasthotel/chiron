@@ -44,4 +44,8 @@ class publicController {
 		global $chiron;
 		$chiron->perform_cron();
 	}
+	
+	public function actionhomepage(){
+	  	global $chiron;
+	}
 }
