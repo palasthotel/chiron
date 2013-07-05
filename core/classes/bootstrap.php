@@ -6,6 +6,8 @@ include 'simplepie.inc';
 include 'chiron.php';
 include 'feed.php';
 include 'item.php';
+include 'user.php';
 include 'public.php';
+
 
 $chiron = new chiron();

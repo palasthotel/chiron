@@ -1,18 +1,11 @@
 <?php 
 
 
-class user extends chironbase {
+class user extends chiron {
   public $id;
   public $slug;
   public $email;
-  public $firstname;
-  public $lastname;
-  public $is_active;
-  public $is_blocked;
-  public $is_admin;
-  public $date_firstlogin;
-  public $date_lastlogin;
-  public $password
+  public $password;
   public $onetimecode;
   
   
@@ -59,6 +52,10 @@ class user extends chironbase {
   // Get the ID of the Page
   public function get_page_id_by_name($page_name){
     
+  }
+  
+  public function encrypt_password($unencrypted_password){
+    return md5($password);
   }
   
   
