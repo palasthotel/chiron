@@ -13,10 +13,10 @@ if($class == ""){ $class = "public"; }
 // Set default Action
 if($action == ""){ $action = "homepage"; }
 
-$class=$class."Controller";
-
-$controller=new $class();
-$method="action".$action;
+$class = $class."_controller";
+$controller = new $class();
+$method = "action_".$action;
+include("core/templates/header.tpl.php");
 $controller->$method($args);
-
+include("core/templates/footer.tpl.php");
 ?>

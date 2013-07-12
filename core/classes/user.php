@@ -10,7 +10,15 @@ class user extends chiron {
   
   
   public function add(){
-    
+    if($this->exists($email)){
+			return false;
+		}else{
+			global $db;			
+			$query = "INSERT INTO `user` (`id` , `slug` ,  `email` , `password` ,  `onetimecode` ) VALUES ( NULL , '', '".$this->email."', '".$this->password."', NULL );";
+      $result = mysql_query($query) or print('Query failed: ' . mysql_error()); 
+			$this->load_by_email($email);
+      return true;   
+		}
   }
   
   public function update(){
@@ -20,6 +28,37 @@ class user extends chiron {
   public function delete(){
     
   }
+
+  public function exists(){
+		global $db;
+		$query = "SELECT count(email) FROM user WHERE email='".$this->email."'";  
+		$result = mysql_query($query);
+    $return = mysql_fetch_array($result);
+    if($return[0]==0){
+      return false;
+    }else {
+      return true;
+    }		
+	}
+	
+	public function login(){
+		$query = "SELECT id FROM user WHERE email='".$this->email."' and password='".$this->password."'";  
+		$result = mysql_query($query);
+    $return = mysql_fetch_array($result);
+		$this->id = $return['id'];
+	}
+	
+	public function sanitize(){
+		$this->email = strip_tags($this->email);		
+	}
+	
+	public function load_by_email($email){
+		global $db;
+		$query = "SELECT id FROM user WHERE email='".$this->email."'";  
+		$result = mysql_query($query);
+    $return = mysql_fetch_array($result);
+		$this->id = $return['id'];
+	}
   
   
   // User Meta Actions
@@ -44,18 +83,8 @@ class user extends chiron {
   
   }
   
-  // Add the Meta-Set "Page";
-  public function add_page($page_name){
-    
-  }
-  
-  // Get the ID of the Page
-  public function get_page_id_by_name($page_name){
-    
-  }
-  
-  public function encrypt_password($unencrypted_password){
-    return md5($password);
+  public function encrypt_password(){
+    $this->password = md5($this->password);
   }
   
   

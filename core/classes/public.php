@@ -1,8 +1,8 @@
 <?php
 
-class publicController {
+class public_controller {
 
-	public function actionnewsstream()
+	public function action_newsstream()
 	{
 		global $chiron;
 		$chiron->feeds_get_all();
@@ -39,13 +39,95 @@ class publicController {
 		echo json_encode($mytems);
 	}
 
-	public function actioncron()
+	public function action_cron()
 	{
 		global $chiron;
 		$chiron->perform_cron();
 	}
 	
-	public function actionhomepage(){
+	public function action_homepage(){
 	  	global $chiron;
 	}
+	
+	public function action_apply(){
+		$output  = "";
+		$user = new user();
+		$classes = array();
+		$classes['email'] = array();
+		$classes['password'] = array();
+		$errors = array();
+		$errors['email'] = "";
+		$errors['password'] = "";
+		$application = true;
+		$anewheroisborn = false;
+		
+		if($_POST['email']!="" or $_POST['password']!=""){			
+				$user->email = $_POST['email'];
+				$user->password = $_POST['password'];
+				$user->sanitize();				
+				// Check Email
+				if($user->email == ""){
+					$errors['email'] = "You didn't leave an Email at all.";
+					$classes['email'][] = "error";
+					$application = false;
+				}elseif(!filter_var($user->email, FILTER_VALIDATE_EMAIL)){
+					$errors['email'] = "Sorry, but this is no valid Email-Address.";
+					$classes['email'][] = "error";
+					$application = false;
+				}elseif($user->exists()){
+					$errors['email'] = "Sorry, but this Email is already enlisted in Chirons School.";
+					$classes['email'][] = "error";
+					$application = false;
+				}
+				// Check Password
+				if($user->password == ""){
+					$errors['password'] = "You didn't came up with a password.";
+					$classes['password'][] = "error";
+					$application = false;
+				}else{
+					$user->encrypt_password();
+				}
+			
+				if($application){
+					if($user->add()){
+						$anewheroisborn = true;
+						$output = "Gratulation, you are Hero No. ".$user->id." at Chirons School";
+					}else{
+						$output = "Woops, althoug you did";
+					}					
+				}				
+		}
+		if(!$anewheroisborn){
+				$output .= "<h2>Apply for an admission to Chirons school.</h2>";
+				$output .= "<form action='?path=public/apply' method='post'>";
+				$output .= "<p class='".implode(' ', $classes['email'])."'>Email: <input type='text' name='email' value='".$user->email."'/> ".$errors['email']."</p>";
+				$output .= "<p class='".implode(' ', $classes['password'])."'>Password: <input type='password' name='password' value='".$user->password."'/> ".$errors['password']."</p>";
+				$output .= "<input type='submit'/>";
+				$output .= "</form>";
+		}
+	
+		print $output;
+	}
+	
+		public function action_enter(){
+			$classes = array();
+			$classes['email'] = array();
+			$classes['password'] = array();
+			$errors = array();
+			$errors['email'] = "";
+			$errors['password'] = "";
+			$enteredschool = false;
+			
+			if(!$enteredschool){
+					$output .= "<h2>Enter Chirons school.</h2>";
+					$output .= "<form action='?path=public/enter' method='post'>";
+					$output .= "<p class='".implode(' ', $classes['email'])."'>Email: <input type='text' name='email' value='".$user->email."'/> ".$errors['email']."</p>";
+					$output .= "<p class='".implode(' ', $classes['password'])."'>Password: <input type='password' name='password' value='".$user->password."'/> ".$errors['password']."</p>";
+					$output .= "<input type='submit'/>";
+					$output .= "</form>";
+			}
+			print $output;
+		}
+	
+	
 }
