@@ -16,7 +16,8 @@ if($action == ""){ $action = "homepage"; }
 $class = $class."_controller";
 $controller = new $class();
 $method = "action_".$action;
+$output = $controller->$method($args);
 include("core/templates/header.tpl.php");
-$controller->$method($args);
+print ($output);
 include("core/templates/footer.tpl.php");
 ?>

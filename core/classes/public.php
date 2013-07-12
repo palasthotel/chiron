@@ -100,16 +100,26 @@ class public_controller {
 		if(!$anewheroisborn){
 				$output .= "<h2>Apply for an admission to Chirons school.</h2>";
 				$output .= "<form action='?path=public/apply' method='post'>";
-				$output .= "<p class='".implode(' ', $classes['email'])."'>Email: <input type='text' name='email' value='".$user->email."'/> ".$errors['email']."</p>";
-				$output .= "<p class='".implode(' ', $classes['password'])."'>Password: <input type='password' name='password' value='".$user->password."'/> ".$errors['password']."</p>";
+				$output .= "<p class='".implode(' ', $classes['email'])."'>Email:</p>";
+				$output .= "<p><input type='text' name='email' value='".$user->email."'/></p>";
+				if($errors['email'] !=""){
+					$output .= "<p class='".implode(' ', $classes['email'])."'>".$errors['email']."</p>";
+				}
+				$output .= "<p class='".implode(' ', $classes['password'])."'>Password:</p>";
+				$output .= " <p><input type='password' name='password' value='".$user->password."'/></p>";
+				if($errors['password'] != ""){
+					$output .= "<p class='".implode(' ', $classes['email'])."'>".$errors['password']."</p>";
+				}
 				$output .= "<input type='submit'/>";
 				$output .= "</form>";
 		}
 	
-		print $output;
+		return $output;
 	}
 	
 		public function action_enter(){
+			$output  = "";
+			$user = new user();
 			$classes = array();
 			$classes['email'] = array();
 			$classes['password'] = array();
@@ -117,16 +127,82 @@ class public_controller {
 			$errors['email'] = "";
 			$errors['password'] = "";
 			$enteredschool = false;
+			$application = true;
+			
+			if($_POST['email']!="" or $_POST['password']!=""){			
+					$user->email = $_POST['email'];
+					$user->password = $_POST['password'];
+					$user->sanitize();	
+					
+					// Check Password
+					if($user->password == ""){
+						$errors['password'] = "You didn't enter any password, friend.";
+						$classes['password'][] = "error";
+						$application = false;
+					}else{
+						$user->encrypt_password();
+					}
+								
+					// Check Email
+					if($user->email == ""){
+						$errors['email'] = "You didn't leave an Email at all.";
+						$classes['email'][] = "error";
+						$application = false;
+						$user->password = "";
+					}elseif(!filter_var($user->email, FILTER_VALIDATE_EMAIL)){
+						$errors['email'] = "Sorry, but this is no valid Email-Address.";
+						$classes['email'][] = "error";
+						$application = false;
+						$user->password = "";
+					}elseif(!$user->exists()){
+						$errors['email'] = "Sorry, but Noone with this Email is not enlisted in Chirons School.";
+						$classes['email'][] = "error";
+						$application = false;
+						$user->password = "";
+					}
+					
+					// Check Email AND Password
+					if($application){
+						$user->login();
+						if($user->id !=""){
+							$output .= "<h2>Welcome back to Chirons school, Hero No. ".$user->id."!</h2>";
+							$enteredschool = true;						
+							$_SESSION['hero'] = $user->id;
+						}else{						
+							$user->password = "";
+							$errors['password'] = "Woops, that didn't seem to be the correct Password, young Apprentice!";
+							$classes['password'][] = "error";
+						}
+					}
+
+								
+			}
+			
 			
 			if(!$enteredschool){
 					$output .= "<h2>Enter Chirons school.</h2>";
 					$output .= "<form action='?path=public/enter' method='post'>";
-					$output .= "<p class='".implode(' ', $classes['email'])."'>Email: <input type='text' name='email' value='".$user->email."'/> ".$errors['email']."</p>";
-					$output .= "<p class='".implode(' ', $classes['password'])."'>Password: <input type='password' name='password' value='".$user->password."'/> ".$errors['password']."</p>";
+					$output .= "<p class='".implode(' ', $classes['email'])."'>Email:</p>";
+					$output .= "<p><input type='text' name='email' value='".$user->email."'/></p>";
+					if($errors['email'] !=""){
+						$output .= "<p class='".implode(' ', $classes['email'])."'>".$errors['email']."</p>";
+					}
+					$output .= "<p class='".implode(' ', $classes['password'])."'>Password:</p>";
+					$output .= " <p><input type='password' name='password' value='".$user->password."'/></p>";
+					if($errors['password'] != ""){
+						$output .= "<p class='".implode(' ', $classes['password'])."'>".$errors['password']."</p>";
+					}
 					$output .= "<input type='submit'/>";
 					$output .= "</form>";
 			}
-			print $output;
+			return $output;
+		}
+		
+		public function action_leave(){
+			$_SESSION['hero'] = '';
+			session_destroy();
+			$output .= "<h2>You have left Chirons school, for now. Take care on your ways!</h2>";
+			return $output;
 		}
 	
 	

@@ -8,6 +8,7 @@ include 'feed.php';
 include 'item.php';
 include 'user.php';
 include 'public.php';
-
+include 'private.php';
 
 $chiron = new chiron();
+session_start();
