@@ -1,5 +1,7 @@
 <?php
 
+// This File contains the non-CMS Version of Chiron.
+
 include ("core/classes/bootstrap.php");
 
 $path=$_GET['path'];
