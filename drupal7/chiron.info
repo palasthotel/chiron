@@ -1,0 +1,6 @@
+name = Chiron
+description = The Teacher of Heros
+package = Core
+version = VERSION
+core = 7.x
+
