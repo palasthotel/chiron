@@ -1,4 +1,156 @@
 <?php 
 
 
+function chiron_schema(){
+	
+	return array(
+		'chiron_source'=>array(
+			'description'=>t('Stores all Sources'),
+			'fields'=>array(
+				'id'=>array(
+					'description'=>t('source id'),
+					'type'=>'int',
+					'size'=>'normal',
+					'not null'=>true,
+					'unsigned'=>false,
+				),
+				'title'=>array(
+					'description'=>t('source title'),
+					'type'=>'text',
+					'size'=>'normal',
+				),
+				'url'=>array(
+					'description'=>t('source url'),
+					'type'=>'text',
+					'size'=>'normal',
+				),
+			),
+			'primary key'=>array('id'),
+			'mysql_engine'=>'InnoDB',
+		),
+		'chiron_source_meta'=>array(
+			'description'=>t('Stores Metadata for each Source, possibly user depended'),
+			'fields'=>array(
+				'id'=>array(
+					'description'=>t('source meta id'),
+					'type'=>'int',
+					'size'=>'normal',
+					'not null'=>true,
+					'unsigned'=>false,
+				),
+				'id_source'=>array(
+					'description'=>t('source id'),
+					'type'=>'int',
+					'size'=>'normal',
+					'not null'=>true,
+					'unsigned'=>false,
+				),
+				'id_user'=>array(
+					'description'=>t('source id'),
+					'type'=>'int',
+					'size'=>'normal',
+					'not null'=>true,
+					'unsigned'=>false,
+				),
+				'meta_key'=>array(
+					'description'=>t('source meta key'),
+					'type'=>'text',
+					'size'=>'normal',
+				),
+				'meta_value'=>array(
+					'description'=>t('source meta value'),
+					'type'=>'text',
+					'size'=>'normal',
+				),
+			),
+			'primary key'=>array('id'),
+			'mysql_engine'=>'InnoDB',
+		),
+		'chiron_item'=>array(
+			'description'=>t('Stores Items'),
+			'fields'=>array(
+				'id'=>array(
+					'description'=>t('item id'),
+					'type'=>'int',
+					'size'=>'normal',
+					'not null'=>true,
+					'unsigned'=>false,
+				),
+				'id_source'=>array(
+					'description'=>t('source id'),
+					'type'=>'text',
+					'size'=>'normal',
+				),
+				'timestamp'=>array(
+					'description'=>t('date of the item'),
+					'type'=>'int',
+					'size'=>'normal',
+				),
+				'title'=>array(
+					'description'=>t('source title'),
+					'type'=>'text',
+					'size'=>'normal',
+				),
+				'text'=>array(
+					'description'=>t('source text'),
+					'type'=>'text',
+					'size'=>'big',
+				),
+				'meta_key'=>array(
+					'description'=>t('feed meta key'),
+					'type'=>'text',
+					'size'=>'normal',
+				),
+				'url'=>array(
+					'description'=>t('source url'),
+					'type'=>'text',
+					'size'=>'normal',
+				),
+			),
+			'primary key'=>array('id'),
+			'mysql_engine'=>'InnoDB',
+		),
+		'chiron_item_meta'=>array(
+			'description'=>t('Stores Metadata for each Item, possibly user depended'),
+			'fields'=>array(
+				'id'=>array(
+					'description'=>t('item meta id'),
+					'type'=>'int',
+					'size'=>'normal',
+					'not null'=>true,
+					'unsigned'=>false,
+				),
+				'id_item'=>array(
+					'description'=>t('item id'),
+					'type'=>'int',
+					'size'=>'normal',
+					'not null'=>true,
+					'unsigned'=>false,
+				),
+				'id_user'=>array(
+					'description'=>t('user id'),
+					'type'=>'int',
+					'size'=>'normal',
+					'not null'=>true,
+					'unsigned'=>false,
+				),
+				'meta_key'=>array(
+					'description'=>t('item meta key'),
+					'type'=>'text',
+					'size'=>'normal',
+				),
+				'meta_value'=>array(
+					'description'=>t('item meta value'),
+					'type'=>'text',
+					'size'=>'normal',
+				),
+			),
+			'primary key'=>array('id'),
+			'mysql_engine'=>'InnoDB',
+		),
+	);
+	
+	
+}
+
 ?>
