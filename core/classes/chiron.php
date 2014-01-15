@@ -1,39 +1,39 @@
 <?php
 
 class chiron {
-  public $db;
-  public $feeds;
-  public $items;
-	public $storage;
+	public $db;
+  	public $feeds;
+  	public $items;
+  	public $storage;
 	
 	
 	public function __construct() {
-    $this->db = mysql_connect(DB_SRV, DB_USR, DB_PWD);
-    mysql_select_db(DB_DBS) or die('Could not select database');
-  }
+    	$this->db = mysql_connect(DB_SRV, DB_USR, DB_PWD);
+    	mysql_select_db(DB_DBS) or die('Could not select database');
+	}
 	
 	
 	public function feeds_get_all(){
-    $query = "SELECT * FROM feed ORDER BY title";
-    $result = mysql_query($query) or print('Query failed: ' . mysql_error());
-    $feeds = array();
-    while($feed = mysql_fetch_array($result)){
-      $this->feeds[$feed["id"]] = $feed;
-    }
-    return count($this->feeds);
-  }
+    	$query = "SELECT * FROM feed ORDER BY title";
+    	$result = mysql_query($query) or print('Query failed: ' . mysql_error());
+    	$feeds = array();
+    	while($feed = mysql_fetch_array($result)){
+      		$this->feeds[$feed["id"]] = $feed;
+    	}
+    	return count($this->feeds);
+  	}
 	
 	public function items_get_latest($limit=10){
-    if(isset($this->feeds[0]) and $this->feeds[0]!=""){
-      $query = "SELECT * FROM item WHERE ";
-      foreach($this->feeds as $source){
-        $parts[] = "source = '".$source."' ";
-      }
-      $query .= implode(" OR ", $parts) ;   
-      $query .= "ORDER BY date DESC, id DESC LIMIT ".$limit;
-    }else{
-      $query = "SELECT * FROM item ORDER BY date DESC, id DESC LIMIT ".$limit;
-    }
+    	if(isset($this->feeds[0]) and $this->feeds[0]!=""){
+      		$query = "SELECT * FROM item WHERE ";
+      		foreach($this->feeds as $source){
+        		$parts[] = "source = '".$source."' ";
+      		}
+      		$query .= implode(" OR ", $parts) ;   
+      		$query .= "ORDER BY date DESC, id DESC LIMIT ".$limit;
+    	}else{
+      		$query = "SELECT * FROM item ORDER BY date DESC, id DESC LIMIT ".$limit;
+    	}
 
     $items = array();
     if($query !=""){
