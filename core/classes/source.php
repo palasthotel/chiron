@@ -1,24 +1,24 @@
 <?php 
 
-class feed {
+class source {
   public $id;
-  public $title;
-  public $url;
   public $type;
-  public $last_updated;
+  public $title;
+  public $url;  
+  public $lastchecked;
   public $feed_meta;
 
   public function load($array) {
-    $this->id=$array['id'];
-    $this->title=$array['title'];
-    $this->url=$array['url'];
-    $this->type=$array['type'];
-    $this->last_updated=$array['last_updated'];
+    $this->id = $array['id'];
+	$this->type = $array['type'];
+    $this->title = $array['title'];
+    $this->url = $array['url'];    
+    $this->lastchecked = $array['lastchecked'];
   }
 
   public function exists(){ 
       global $db;
-      $query = "SELECT count(url) FROM feed WHERE url='".$this->url."'";
+      $query = "SELECT count(url) FROM source WHERE url='".$this->url."'";
       $result = mysql_query($query) or print('Query failed: ' . mysql_error());
       $return = mysql_fetch_array($result);
       if($return[0]==0){
@@ -30,7 +30,7 @@ class feed {
 
   public function add(){
       if(!$this->exists()){
-       $query = "INSERT INTO `feed` (`id`, `title`,  `url` ) VALUES ( NULL , '".$this->title."', '".$this->url."');";
+       $query = "INSERT INTO `source` (`id`, `title`,  `url` ) VALUES ( NULL , '".$this->title."', '".$this->url."');";
        $result = mysql_query($query) or print('Query failed: ' . mysql_error());
        return 1;   
      }else{
@@ -39,7 +39,7 @@ class feed {
   }
 
   public function update(){ 
-       $query = "UPDATE  `feed` SET `title` = '".$this->title."',  `url`  =  '".$this->url."' WHERE `id` = '".$feed->id."';";
+       $query = "UPDATE  `source` SET `title` = '".$this->title."',  `url`  =  '".$this->url."' WHERE `id` = '".$feed->id."';";
        print_r($query);
        $result = mysql_query($query) or print('Query failed: ' . mysql_error());
        return 1;   
@@ -65,7 +65,7 @@ class feed {
           $converted->source=$this->id;
           $counter += $converted->add();      
        }
-       $query="UPDATE feed set last_updated=NOW() where id=".$this->id;
+       $query="UPDATE source set lastchecked = NOW() where id=".$this->id;
        mysql_query($query) or print("Query failed: ".mysql_error());
        return $counter;
      }
