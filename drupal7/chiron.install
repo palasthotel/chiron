@@ -14,7 +14,7 @@ function chiron_schema(){
 	
 	$schema['chiron_source']['fields']['id'] = array();
 	$schema['chiron_source']['fields']['id']['description'] = t('source id');
-	$schema['chiron_source']['fields']['id']['type'] = 'int';
+	$schema['chiron_source']['fields']['id']['type'] = 'serial';
 	$schema['chiron_source']['fields']['id']['size'] ='normal';
 	$schema['chiron_source']['fields']['id']['not null'] = true;
 	$schema['chiron_source']['fields']['id']['unsigned'] = false;
@@ -61,7 +61,7 @@ function chiron_schema(){
 	
 	$schema['chiron_source_type']['fields']['id'] = array();
 	$schema['chiron_source_type']['fields']['id']['description'] = t('source type id');
-	$schema['chiron_source_type']['fields']['id']['type'] = 'int';
+	$schema['chiron_source_type']['fields']['id']['type'] = 'serial';
 	$schema['chiron_source_type']['fields']['id']['size'] = 'normal';
 	$schema['chiron_source_type']['fields']['id']['not null'] = true;
 	$schema['chiron_source_type']['fields']['id']['unsigned'] = false;
@@ -82,7 +82,7 @@ function chiron_schema(){
 	
 	$schema['chiron_source_category']['fields']['id'] = array();
 	$schema['chiron_source_category']['fields']['id']['description'] = t('source category id');
-	$schema['chiron_source_category']['fields']['id']['type'] = 'int';
+	$schema['chiron_source_category']['fields']['id']['type'] = 'serial';
 	$schema['chiron_source_category']['fields']['id']['size'] = 'normal';
 	$schema['chiron_source_category']['fields']['id']['not null'] = true;
 	$schema['chiron_source_category']['fields']['id']['unsigned'] = false;
@@ -117,7 +117,7 @@ function chiron_schema(){
 	
 	$schema['chiron_source2category']['fields']['id'] = array();
 	$schema['chiron_source2category']['fields']['id']['description'] = t('source category id');
-	$schema['chiron_source2category']['fields']['id']['type'] = 'int';
+	$schema['chiron_source2category']['fields']['id']['type'] = 'serial';
 	$schema['chiron_source2category']['fields']['id']['size'] = 'normal';
 	$schema['chiron_source2category']['fields']['id']['not null'] = true;
 	$schema['chiron_source2category']['fields']['id']['unsigned'] = false;
@@ -146,7 +146,7 @@ function chiron_schema(){
 	
 	$schema['chiron_subscription']['fields']['id'] = array();
 	$schema['chiron_subscription']['fields']['id']['description'] = t('source category id');
-	$schema['chiron_subscription']['fields']['id']['type'] = 'int';
+	$schema['chiron_subscription']['fields']['id']['type'] = 'serial';
 	$schema['chiron_subscription']['fields']['id']['size'] = 'normal';
 	$schema['chiron_subscription']['fields']['id']['not null'] = true;
 	$schema['chiron_subscription']['fields']['id']['unsigned'] = false;
@@ -175,7 +175,7 @@ function chiron_schema(){
 	
 	$schema['chiron_source_meta']['fields']['id'] = array();
 	$schema['chiron_source_meta']['fields']['id']['description'] = t('source meta id');
-	$schema['chiron_source_meta']['fields']['id']['type'] = 'int';
+	$schema['chiron_source_meta']['fields']['id']['type'] = 'serial';
 	$schema['chiron_source_meta']['fields']['id']['size'] = 'normal';
 	$schema['chiron_source_meta']['fields']['id']['not null'] = true;
 	$schema['chiron_source_meta']['fields']['id']['unsigned'] = false;
@@ -213,7 +213,7 @@ function chiron_schema(){
 	
 	$schema['chiron_item']['fields']['id'] = array();
 	$schema['chiron_item']['fields']['id']['description'] = t('item id');
-	$schema['chiron_item']['fields']['id']['type'] = 'int';
+	$schema['chiron_item']['fields']['id']['type'] = 'serial';
 	$schema['chiron_item']['fields']['id']['size'] ='normal';
 	$schema['chiron_item']['fields']['id']['not null'] = true;
 	$schema['chiron_item']['fields']['id']['unsigned'] = false;
@@ -256,7 +256,7 @@ function chiron_schema(){
 	
 	$schema['chiron_item_meta']['fields']['id'] = array();
 	$schema['chiron_item_meta']['fields']['id']['description'] = t('item meta id');
-	$schema['chiron_item_meta']['fields']['id']['type'] = 'int';
+	$schema['chiron_item_meta']['fields']['id']['type'] = 'serial';
 	$schema['chiron_item_meta']['fields']['id']['size'] = 'normal';
 	$schema['chiron_item_meta']['fields']['id']['not null'] = true;
 	$schema['chiron_item_meta']['fields']['id']['unsigned'] = false;
