@@ -9,6 +9,7 @@
 
 // First, like in all Implementations, get the Database Credentials
 global $table_prefix;
+
 define(CHIRON_DB_SRV,DB_HOST);
 define(CHIRON_DB_USR,DB_USER);
 define(CHIRON_DB_PWD,DB_PASSWORD);

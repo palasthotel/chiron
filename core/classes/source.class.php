@@ -9,17 +9,20 @@ class chiron_source {
   public $feed_meta;
   public $chiron_source_db;
 
+  	public function __construct(){
+		$this->chiron_source_db = new chiron_source_db();
+	}
+
   public function load($array) {
     $this->id = $array['id'];
 	$this->type = $array['type'];
     $this->title = $array['title'];
     $this->url = $array['url'];    
-    $this->lastchecked = $array['lastchecked'];
-	$this->chiron_source_db = new chiron_source_db();
+    $this->lastchecked = $array['lastchecked'];	
   }
 
   public function exists(){            
-      $return = $chiron_source_db->url_count($this->url);
+      $return = $this->chiron_source_db->url_count($this->url);
       if($return[0]==0){
         return false;
       }else {
@@ -28,9 +31,11 @@ class chiron_source {
   }
 
   public function add(){
-      if(!$this->exists()){
-       $query = "INSERT INTO `".DB_PRE."chiron_source` (`id`, `title`,  `url` ) VALUES ( NULL , '".$this->title."', '".$this->url."');";
-       $result = mysql_query($query) or print('Query failed: ' . mysql_error());
+	if(!$this->exists()){
+		if($this->type == ""){
+			$this->type = "1";
+		}
+       $this->chiron_source_db->source_add($this->title, $this->type, $this->url);
        return 1;   
      }else{
        return 0;
