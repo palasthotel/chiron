@@ -15,6 +15,12 @@ class chiron_source_db{
 	    $result = $chiron_db->query($query);
 		return $result;
 	}
+	
+	public function set_lastchecked($id, $timestamp){
+		global $chiron_db;
+		$query = "UPDATE ".$chiron_db->prefix."chiron_source set lastchecked = ".$timestamp." WHERE id = ".$id."";
+		return $chiron_db->query($query) or print("Query failed: ".mysql_error()." Query:".$query);
+	}
 }
 
 

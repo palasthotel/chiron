@@ -36,10 +36,7 @@ class chiron_item {
   }
   
   public function exists(){ 
-    global $db;
-    $query = "SELECT count(url) FROM item WHERE url='".mysql_real_escape_string($this->url)."'";  
-    $result = mysql_query($query);
-    $return = mysql_fetch_array($result);
+    $return = $this->chiron_item_db->url_exists($this->url);
     if($return[0]==0){
       return false;
     }else {
@@ -51,10 +48,11 @@ class chiron_item {
     if(!$this->exists()){
       $date = $this->date;
       if($date == "0000-00-00 00:00:00"){
-        $date = date("Y-m-d H:i:s");
-      }
-      $query = "INSERT INTO `item` (`id` , `source` ,  `date` , `title` ,  `text` ,  `url` ) VALUES ( NULL , '".$this->source."', '".$date."', '".addslashes($this->title)."', '".addslashes($this->text)."', '".mysql_real_escape_string($this->url)."' );";
-      $result = mysql_query($query) or print('Query failed: ' . mysql_error()); 
+        	$date = time();
+      }else{
+			$date = strtotime($date);
+	  }
+      $return = $this->chiron_item_db->item_add($this->source, $date, $this->title, $this->text, $this->url);
       return 1;   
     }else{
       return 0;

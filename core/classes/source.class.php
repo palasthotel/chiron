@@ -63,14 +63,14 @@ class chiron_source {
        }
 
        $counter = 0;
-       foreach($items as $item){
-          $converted=new item();
+       foreach($items as $item){	
+          $converted = new chiron_item();
           $converted->fill($item);
           $converted->source=$this->id;
           $counter += $converted->add();      
        }
-       $query="UPDATE source set lastchecked = NOW() where id=".$this->id;
-       mysql_query($query) or print("Query failed: ".mysql_error());
+
+       $this->chiron_source_db->set_lastchecked($this->id, time());
        return $counter;
      }
   

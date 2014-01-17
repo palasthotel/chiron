@@ -63,6 +63,8 @@ function chiron_wp_admin_menu()
 		add_submenu_page('chiron_dashboard', 'Add new Source', 'Add new Source', 'read', 'chiron_add_source', 'chiron_wp_add_source' );
 		add_submenu_page('chiron_dashboard', 'Manage Categories', 'Manage Categories', 'read', 'chiron_manage_categories', 'chiron_wp_manage_categories' );
 		add_submenu_page('chiron_dashboard', 'Settings', 'Settings', 'read', 'chiron_manage_subscriptions', 'chiron_wp_settings' );
+		
+		add_submenu_page('null', 'Refresh Source', 'Refresh Source', 'read', 'chiron_refresh_source', 'chiron_wp_refresh_source' );
 }
 
 add_action("admin_menu","chiron_wp_admin_menu");
@@ -87,6 +89,7 @@ function chiron_wp_manage_sources(){
 		print '<tr>';
 		print '<th>Titel</th>';
 		print '<th>URL</th>';
+		print '<th>Last Checked</th>';
 		print '</tr>';
 		print '</thead>';
 		$oddoreven = "odd";
@@ -99,6 +102,12 @@ function chiron_wp_manage_sources(){
 			print "<tr class='".$classes."'>";
 			print "<td>".$source['title']."</td>";
 			print "<td>".$source['url']."</td>";
+			if($source['lastchecked']>0){
+				$date = date("d. m. Y H:i:s", $source['lastchecked'] );
+			}else{
+				$date = "never";
+			}
+			print "<td>".$date."</td>";
 			print "</tr>";
 			if($oddoreven == "odd"){
 				$oddoreven = "even";
@@ -110,6 +119,7 @@ function chiron_wp_manage_sources(){
 		print '<tr>';
 		print '<th>Titel</th>';
 		print '<th>URL</th>';
+		print '<th>Last Checked</th>';
 		print '</tr>';
 		print '</tfoot>';
 		print "</table>";
@@ -159,4 +169,15 @@ function chiron_wp_add_source(){
 		
 	
 	print "</div> <!-- // .wrap -->";
+}
+
+function chiron_wp_refresh_source(){
+	if(isset($_GET) && !empty($_GET)){
+		if($_GET['source']!=""){
+			$source = new chiron_source();
+			$source->id = "4";
+			$source->url = "http://anmutunddemut.de/feed/atom";
+			$source->refresh();
+		}
+	}
 }
