@@ -89,3 +89,45 @@ function chiron_wp_activate(){
 
 register_activation_hook(__FILE__, "chiron_wp_activate");
 
+function chiron_wp_admin_menu()
+{        
+        add_menu_page('Reader','Chiron','read','chiron_dashboard','chiron_wp_dashboard', 'dashicons-book-alt', '76');
+		add_submenu_page('chiron_dashboard', 'News-Dashboard', 'News-Dashboard', 'read', 'chiron_dashboard', 'chiron_wp_dashboard' );
+		add_submenu_page('chiron_dashboard', 'Manage Sources', 'Manage Sources', 'read', 'chiron_manage_sources', 'chiron_wp_manage_sources' );
+		add_submenu_page('chiron_dashboard', 'Manage Categories', 'Manage Categories', 'read', 'chiron_manage_categories', 'chiron_wp_manage_categories' );
+		add_submenu_page('chiron_dashboard', 'Settings', 'Settings', 'read', 'chiron_manage_subscriptions', 'chiron_wp_settings' );
+}
+
+add_action("admin_menu","chiron_wp_admin_menu");
+
+function chiron_wp_dashboard(){
+	print "<div class='wrap'>";
+	print "<h2>Welcome to your News-Dashboard, young Hero or Heroine!</h2>";
+	print "</div>";
+}
+
+
+function chiron_wp_manage_sources(){
+	print "<div class='wrap'>";
+	print "<h2>Sources <a class='add-new-h2' href='#'>Add New</a></h2>";
+	print "<p>Manage your Sources, young Hero or Heroine!</p>";
+	print "</div>";
+}
+
+
+
+function chiron_wp_settings(){
+	print "<div class='wrap'>";
+	print "<h2>Chiron Settings</h2>";
+	print "<p>Manage your Settings, young Hero or Heroine!</p>";
+	print "</div>";
+}
+
+
+function chiron_wp_manage_categories(){
+	print "<div class='wrap'>";
+	print "<h2>Categories of your Sources <a class='add-new-h2' href='#'>Add New</a></h2>";
+	print "<p>Manage the Categoreis of your Sources, young Hero or Heroine!</p>";
+	print "</div>";
+}
+
