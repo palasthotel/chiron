@@ -94,6 +94,7 @@ function chiron_wp_admin_menu()
         add_menu_page('Reader','Chiron','read','chiron_dashboard','chiron_wp_dashboard', 'dashicons-book-alt', '76');
 		add_submenu_page('chiron_dashboard', 'News-Dashboard', 'News-Dashboard', 'read', 'chiron_dashboard', 'chiron_wp_dashboard' );
 		add_submenu_page('chiron_dashboard', 'Manage Sources', 'Manage Sources', 'read', 'chiron_manage_sources', 'chiron_wp_manage_sources' );
+		add_submenu_page('chiron_dashboard', 'Add new Source', 'Add new Source', 'read', 'chiron_add_source', 'chiron_wp_add_source' );
 		add_submenu_page('chiron_dashboard', 'Manage Categories', 'Manage Categories', 'read', 'chiron_manage_categories', 'chiron_wp_manage_categories' );
 		add_submenu_page('chiron_dashboard', 'Settings', 'Settings', 'read', 'chiron_manage_subscriptions', 'chiron_wp_settings' );
 }
@@ -110,10 +111,10 @@ function chiron_wp_dashboard(){
 function chiron_wp_manage_sources(){
 	global $chiron;
 	print "<div class='wrap'>";
-	print "<h2>Sources <a class='add-new-h2' href='#'>Add New</a></h2>";
+	print "<h2>Sources <a class='add-new-h2' href='?page=chiron_add_source'>Add New</a></h2>";
 	print "<p>Manage your Sources, young Hero or Heroine!</p>";
 	$no = $chiron->sources_get_all();
-	print "<p>You have ".$no." Sources of Information.</p>";
+	print "<p>You have ".$no." magnificent Sources of Information.</p>";
 	if($no>0){
 		print "<table class='wp-list-table widefat'>";
 		print '<thead>';
@@ -147,7 +148,7 @@ function chiron_wp_manage_sources(){
 		print '</tfoot>';
 		print "</table>";
 	}
-	print "</div>";
+	print "</div> <!-- // .wrap -->";
 }
 
 
@@ -156,7 +157,7 @@ function chiron_wp_settings(){
 	print "<div class='wrap'>";
 	print "<h2>Chiron Settings</h2>";
 	print "<p>Manage your Settings, young Hero or Heroine!</p>";
-	print "</div>";
+	print "</div> <!-- // .wrap -->";
 }
 
 
@@ -164,6 +165,32 @@ function chiron_wp_manage_categories(){
 	print "<div class='wrap'>";
 	print "<h2>Categories of your Sources <a class='add-new-h2' href='#'>Add New</a></h2>";
 	print "<p>Manage the Categoreis of your Sources, young Hero or Heroine!</p>";
-	print "</div>";
+	print "</div> <!-- // .wrap -->";
 }
 
+
+function chiron_wp_add_source(){
+	global $chiron;
+	print "<div class='wrap'>";
+	print "<h2>Add a new Source</h2>";
+	
+	if(isset($_POST) && !empty($_POST)){
+		$source = new chiron_source();
+		$source->title = $_POST['title'];
+		$source->url = $_POST['url'];
+		$result = $source->add();
+		if($result == "1"){
+			print '<div id="message" class="updated below-h2"><p>Source added successfully.</p></div>';
+		}
+	}
+	print "<div class='form-wrap'>";
+	print '<form method="post">';
+	print '<div class="form-field form-required"><label>URL of your new Source</label><input type="text" name="url" /><p>The URL under which your Source is awailable.</p></div>';
+	print '<div class="form-field form-required"><label>Title of your new Source</label><input type="text" name="title"><p>If you leave it blank, the Title will be created from the Source itself. You may edit it later on.</p></div>';
+	print '<input type="submit">';
+	print '</form>';
+	print "</div> <!-- // .form-wrap -->";
+		
+	
+	print "</div> <!-- // .wrap -->";
+}
