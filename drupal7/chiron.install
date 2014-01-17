@@ -35,6 +35,13 @@ function chiron_schema(){
 	$schema['chiron_source']['fields']['url']['description'] = t('source url');
 	$schema['chiron_source']['fields']['url']['type'] = 'text';
 	$schema['chiron_source']['fields']['url']['size'] = 'normal';
+	
+	$schema['chiron_source']['fields']['lastchecked'] = array();
+	$schema['chiron_source']['fields']['lastchecked']['description'] = t('timestamp of last check of this source');
+	$schema['chiron_source']['fields']['lastchecked']['type'] = 'int';
+	$schema['chiron_source']['fields']['lastchecked']['size'] ='normal';
+	$schema['chiron_source']['fields']['lastchecked']['not null'] = true;
+	$schema['chiron_source']['fields']['lastchecked']['unsigned'] = false;
 
 
 	// Table for Source Type	
