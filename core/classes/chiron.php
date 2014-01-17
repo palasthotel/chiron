@@ -2,7 +2,7 @@
 
 class chiron {
 	public $db;
-  	public $feeds;
+  	public $sources;
   	public $items;
   	public $storage;
 	
@@ -13,14 +13,15 @@ class chiron {
 	}
 	
 	
-	public function feeds_get_all(){
-    	$query = "SELECT * FROM source ORDER BY title";
+	public function sources_get_all(){
+		global $wpdb;
+    	$query = "SELECT * FROM ".DB_PRE."chiron_source ORDER BY title";
     	$result = mysql_query($query) or print('Query failed: ' . mysql_error());
     	$feeds = array();
-    	while($feed = mysql_fetch_array($result)){
-      		$this->feeds[$feed["id"]] = $feed;
+    	while($source = mysql_fetch_array($result)){
+      		$this->sources[$source["id"]] = $source;
     	}
-    	return count($this->feeds);
+    	return count($this->sources);
   	}
 	
 	public function items_get_latest($limit=10){
