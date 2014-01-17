@@ -36,6 +36,11 @@ function chiron_schema(){
 	$schema['chiron_source']['fields']['url']['type'] = 'text';
 	$schema['chiron_source']['fields']['url']['size'] = 'normal';
 	
+	$schema['chiron_source']['fields']['status'] = array();
+	$schema['chiron_source']['fields']['status']['description'] = t('sources status');
+	$schema['chiron_source']['fields']['status']['type'] = 'text';
+	$schema['chiron_source']['fields']['status']['size'] = 'normal';
+	
 	$schema['chiron_source']['fields']['lastchecked'] = array();
 	$schema['chiron_source']['fields']['lastchecked']['description'] = t('timestamp of last check of this source');
 	$schema['chiron_source']['fields']['lastchecked']['type'] = 'int';
