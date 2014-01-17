@@ -14,7 +14,7 @@ class chiron {
 	
 	
 	public function feeds_get_all(){
-    	$query = "SELECT * FROM feed ORDER BY title";
+    	$query = "SELECT * FROM source ORDER BY title";
     	$result = mysql_query($query) or print('Query failed: ' . mysql_error());
     	$feeds = array();
     	while($feed = mysql_fetch_array($result)){
@@ -69,7 +69,7 @@ class chiron {
   }
 
   public function perform_cron() {
-    $query = "SELECT * FROM feed ORDER BY last_updated ASC limit ".FEEDS_PER_CRON.";";
+    $query = "SELECT * FROM source ORDER BY last_updated ASC limit ".FEEDS_PER_CRON.";";
     $result = mysql_query($query) or print('Query failed: '.mysql_error());
     while($item = mysql_fetch_array($result)) {
       $feed=new feed();
