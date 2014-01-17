@@ -108,9 +108,45 @@ function chiron_wp_dashboard(){
 
 
 function chiron_wp_manage_sources(){
+	global $chiron;
 	print "<div class='wrap'>";
 	print "<h2>Sources <a class='add-new-h2' href='#'>Add New</a></h2>";
 	print "<p>Manage your Sources, young Hero or Heroine!</p>";
+	$no = $chiron->sources_get_all();
+	print "<p>You have ".$no." Sources of Information.</p>";
+	if($no>0){
+		print "<table class='wp-list-table widefat'>";
+		print '<thead>';
+		print '<tr>';
+		print '<th>Titel</th>';
+		print '<th>URL</th>';
+		print '</tr>';
+		print '</thead>';
+		$oddoreven = "odd";
+		foreach($chiron->sources as $source){
+			$rowclasses = array();
+			if($oddoreven == "odd"){
+				$rowclasses[] = "alternate";
+			}
+			$classes = implode(" ", $rowclasses);
+			print "<tr class='".$classes."'>";
+			print "<td>".$source['title']."</td>";
+			print "<td>".$source['url']."</td>";
+			print "</tr>";
+			if($oddoreven == "odd"){
+				$oddoreven = "even";
+			}else{
+				$oddoreven = "odd";
+			}
+		}
+		print '<tfoot>';
+		print '<tr>';
+		print '<th>Titel</th>';
+		print '<th>URL</th>';
+		print '</tr>';
+		print '</tfoot>';
+		print "</table>";
+	}
 	print "</div>";
 }
 
