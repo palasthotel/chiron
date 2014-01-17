@@ -5,11 +5,29 @@ Chiron is the Teacher of Heros and Heroines. It's a PHP based multi-user, multi-
 
 ## References
 
-Chiron makes heavy use of Simple-Pie.
+### The Centaur
 
-http://simplepie.org/
-https://github.com/simplepie/simplepie/
+Find out more about the mythical Centaur.
 
-Find out more about eh mythical Centaur.
+* https://en.wikipedia.org/wiki/Chiron
 
-https://en.wikipedia.org/wiki/Chiron
+
+### Simple-Pie
+
+Chiron makes heavy use of Simple-Pie. Many thanks to all the Contributors over there.
+
+* http://simplepie.org/
+* https://github.com/simplepie/simplepie/
+
+### Wordpress
+
+Chiron was first built to be used within the lovely Wordpress. If you're not familiar with it, got and try it yourself!
+
+* http://wordpress.org/
+* http://wordpress.com/
+
+### Drupal
+
+Chiron is also available for the mighty mighty Drupal. Check it out, if you're looking for some serious CMS-Stuff.
+
+* http://drupal.org/
