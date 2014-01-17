@@ -1,26 +1,18 @@
 <?php
 
 class chiron_core {
-	public $db;
+	public $chiron_core_db;
   	public $sources;
   	public $items;
-  	public $storage;
 	
 	
-	public function __construct() {
-    	$this->db = mysql_connect(DB_SRV, DB_USR, DB_PWD);
-    	mysql_select_db(DB_DBS) or die('Could not select database');
+	public function __construct() {    
+		$this->chiron_core_db = new chiron_core_db();
 	}
 	
 	
 	public function sources_get_all(){
-		global $wpdb;
-    	$query = "SELECT * FROM ".DB_PRE."chiron_source ORDER BY title";
-    	$result = mysql_query($query) or print('Query failed: ' . mysql_error());
-    	$feeds = array();
-    	while($source = mysql_fetch_array($result)){
-      		$this->sources[$source["id"]] = $source;
-    	}
+    	$this->sources = $this->chiron_core_db->sources_get_all();
     	return count($this->sources);
   	}
 	

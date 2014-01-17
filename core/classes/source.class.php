@@ -7,6 +7,7 @@ class chiron_source {
   public $url;  
   public $lastchecked;
   public $feed_meta;
+  public $chiron_source_db;
 
   public function load($array) {
     $this->id = $array['id'];
@@ -14,13 +15,11 @@ class chiron_source {
     $this->title = $array['title'];
     $this->url = $array['url'];    
     $this->lastchecked = $array['lastchecked'];
+	$this->chiron_source_db = new chiron_source_db();
   }
 
-  public function exists(){ 
-      global $db;
-      $query = "SELECT count(url) FROM `".DB_PRE."chiron_source` WHERE url='".$this->url."'";
-      $result = mysql_query($query) or print('Query failed: ' . mysql_error());
-      $return = mysql_fetch_array($result);
+  public function exists(){            
+      $return = $chiron_source_db->url_count($this->url);
       if($return[0]==0){
         return false;
       }else {

@@ -10,7 +10,13 @@ class chiron_item {
   public $url;
   public $image;
   public $item_meta;
+  public $chiron_item_db;
   
+
+  public function __construct(){
+	$this->chiron_item_db = new chiron_item_db();
+ }
+
   public function load($array){
     $this->id = $array['id'];
     $this->source = $array['source'];
