@@ -7,36 +7,45 @@
 * Author URI: http://www.palasthotel.de
 */
 
+// First, like in all Implementations, get the Database Credentials
+global $table_prefix;
+define(CHIRON_DB_SRV,DB_HOST);
+define(CHIRON_DB_USR,DB_USER);
+define(CHIRON_DB_PWD,DB_PASSWORD);
+define(CHIRON_DB_DBS,DB_NAME);
+define(CHIRON_DB_PRE, $table_prefix);
+
+// Then bootstrap Chiron.
+// This loads all Classes and creates Instances of the classes chiron_db and chiron_core.
 require('core/classes/bootstrap.php');
-require('drupal7/chiron.install');
 
 function t($str){
 	return $str;
 }
 
 function db_query($querystring){
-	global $wpdb;
+	global $chiron_db;
 	$querystring = str_replace("{", $wpdb->prefix, $querystring);
 	$querystring = str_replace("}", "", $querystring);
-    global $chiron_connection;
-    $result = $chiron_connection->query($querystring) or die($querystring." failed: ".$chiron_connection->error);
+
+    $result = $chiron_db->query($querystring) or die($querystring." failed: ".$chiron_db->error);
     return $result;
 }
 
 function chiron_wp_activate(){
 	
 	static $secondCall=FALSE;
-	global $wpdb;
-	global $chiron_connection;
+	$chiron_db = new chiron_db(CHIRON_DB_SRV, CHIRON_DB_USR, CHIRON_DB_PWD, CHIRON_DB_DBS, CHIRON_DB_PRE);
+	
 	$options=get_option("chiron",array());
 	if(!isset($options['installed'])){
 		// Run the Installation
-		$schema = chiron_schema();
-		$chiron_connection=new mysqli(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME);
+		$schema = $chiron_db->schema();
+		
 		
 		// Create a Query for each Table within the Schema Definition
 		foreach($schema as $tablename=>$data){
-			$query="create table ".$wpdb->prefix."$tablename (";
+			$query="create table ".$chiron_db->prefix."$tablename (";
 			$first=TRUE;
 			// Add each Field to the Query
 			foreach($data['fields'] as $fieldname=>$fielddata){
@@ -75,7 +84,7 @@ function chiron_wp_activate(){
 			$query.=",constraint primary key (".implode(",", $data['primary key']).")";
 			$query.=") ";
 			$query.="ENGINE = ".$data['mysql_engine'];
-			$chiron_connection->query($query) or die($chiron_connection->error." ".$query);
+			$chiron_db->query($query) or die($chiron_db->error." ".$query);
 		}
 		
 		// Tell Wordpress that we have installed
