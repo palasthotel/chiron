@@ -10,4 +10,4 @@ include 'user.php';
 include 'public.php';
 include 'private.php';
 
-$chiron = new chiron();
+$chiron = new chiron_core();

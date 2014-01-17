@@ -1,6 +1,6 @@
 <?php 
 
-class source {
+class chiron_source {
   public $id;
   public $type;
   public $title;
@@ -18,7 +18,7 @@ class source {
 
   public function exists(){ 
       global $db;
-      $query = "SELECT count(url) FROM source WHERE url='".$this->url."'";
+      $query = "SELECT count(url) FROM `".DB_PRE."chiron_source` WHERE url='".$this->url."'";
       $result = mysql_query($query) or print('Query failed: ' . mysql_error());
       $return = mysql_fetch_array($result);
       if($return[0]==0){
@@ -30,7 +30,7 @@ class source {
 
   public function add(){
       if(!$this->exists()){
-       $query = "INSERT INTO `source` (`id`, `title`,  `url` ) VALUES ( NULL , '".$this->title."', '".$this->url."');";
+       $query = "INSERT INTO `".DB_PRE."chiron_source` (`id`, `title`,  `url` ) VALUES ( NULL , '".$this->title."', '".$this->url."');";
        $result = mysql_query($query) or print('Query failed: ' . mysql_error());
        return 1;   
      }else{

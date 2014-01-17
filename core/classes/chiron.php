@@ -1,6 +1,6 @@
 <?php
 
-class chiron {
+class chiron_core {
 	public $db;
   	public $sources;
   	public $items;

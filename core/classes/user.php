@@ -1,7 +1,7 @@
 <?php 
 
 
-class user extends chiron {
+class chiron_user {
   public $id;
   public $slug;
   public $email;

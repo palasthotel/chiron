@@ -1,7 +1,7 @@
 <?php 
 
 
-class item {
+class chiron_item {
   public $id;
   public $source;
   public $date;
