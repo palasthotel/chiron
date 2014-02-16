@@ -41,13 +41,7 @@ class chiron_core {
   }
 
   public function items_get_by_day($day){
-    $query = "SELECT * FROM item WHERE date >= '$day 00:00:00' AND date <= '$day 23:59:59'";
-    $result = mysql_query($query) or print('Query failed: ' . mysql_error());   
-    while($item = mysql_fetch_array($result)){
-      $object = new item('', array());
-      $object->load($item);      
-      $this->items[] = $object;
-    }
+   	$this->items = $this->chiron_core_db->items_get_by_day($day);
     return count($this->items);
   }
   

@@ -65,7 +65,7 @@ function chiron_wp_admin_menu()
 		add_submenu_page('chiron_dashboard', 'Manage Categories', 'Manage Categories', 'read', 'chiron_manage_categories', 'chiron_wp_manage_categories' );
 		add_submenu_page('chiron_dashboard', 'Settings', 'Settings', 'read', 'chiron_manage_subscriptions', 'chiron_wp_settings' );
 		add_submenu_page('chiron_dashboard', 'Debugging', 'Debugging', 'read', 'chiron_debugging', 'chiron_wp_debug' );
-		
+		add_submenu_page('null', 'Edit Source', 'Edit Source', 'read', 'chiron_edit_source', 'chiron_wp_edit_source' );
 		add_submenu_page('null', 'Refresh Source', 'Refresh Source', 'read', 'chiron_refresh_source', 'chiron_wp_refresh_source' );
 }
 
@@ -77,7 +77,63 @@ function chiron_wp_dashboard(){
 	print "<h2>Welcome to your News-Dashboard, young Hero or Heroine!</h2>";
 	$sources_count = $chiron->sources_count();
 	$items_count = $chiron->items_count();
-	print "<p>You have <strong>".$sources_count[0]." sources</strong> to learn from and <strong>".$items_count[0]." items</strong> to read.</p>";
+	print "<p><strong>".$items_count[0]." items</strong> from <strong>".$sources_count[0]." sources</strong> are waiting to be read by you.</p>";
+	
+	if($_GET["day"]!=""){
+	    if($_GET["day"]== date("Y-m-d",time())){
+	      $date = date("Y-m-d", time()-60*60*24);
+	    }else{
+	      $date = $_GET["day"];
+	    }
+	  }else{
+	    $date = date("Y-m-d", time()-60*60*24);
+	  }
+	  $timestamp = strtotime($date);
+	
+	
+	print("<p class='pagination'>");    
+	  $yesterday = date("Y-m-d", $timestamp - 60*60*24);
+	  $tomorrow = date("Y-m-d", $timestamp + (60*60*24));
+	  print " <a class='backwards pager' href='?page=chiron_dashboard&day=".$yesterday."'>«</a> ";
+	  print "News of the ".	date("Y-m-d", $timestamp);
+	  if($tomorrow != date("Y-m-d", time())){
+	    print " <a class='forwards pager' href='?page=chiron_dashboard&day=".$tomorrow."'>»</a>";
+	  }
+	 print ("</p>");
+	
+	$day = date("Y-m-d", $timestamp-60*60*24);
+	$chiron->items_get_by_day($day);
+	if(count($chiron->items)>0){
+		print "<table class='wp-list-table widefat'>";
+		print '<thead>';
+		print '<tr>';
+		print '<th>Titel</th>';
+		print '</tr>';
+		print '</thead>';
+		$oddoreven = "odd";
+		foreach($chiron->items as $item){
+			$rowclasses = array();
+			if($oddoreven == "odd"){
+				$rowclasses[] = "alternate";
+			}
+			$classes = implode(" ", $rowclasses);
+			print "<tr class='".$classes."'>";
+			print "<td><a href='".$item->url."'>".$item->title."</a></td>";
+			print "</tr>";
+			if($oddoreven == "odd"){
+				$oddoreven = "even";
+			}else{
+				$oddoreven = "odd";
+			}
+		}
+		print '<tfoot>';
+		print '<tr>';
+		print '<th>Titel</th>';		
+		print '</tr>';
+		print '</tfoot>';
+		print "</table>";
+	}
+	print "<p>".count($chiron->items)." yeasterdays news.</p>";
 	print "</div>";
 }
 
@@ -117,7 +173,7 @@ function chiron_wp_manage_sources(){
 			}
 			print "<td>".$date."</td>";
 			print "<td>".$source['status']."</td>";
-			print "<td>edit | <a href='?page=chiron_refresh_source&source_id=".$source['id']."'>refresh</a></td>";
+			print "<td><a href='?page=chiron_edit_source&source_id=".$source['id']."'>edit</a> | <a href='?page=chiron_refresh_source&source_id=".$source['id']."'>refresh</a></td>";
 			print "</tr>";
 			if($oddoreven == "odd"){
 				$oddoreven = "even";
@@ -171,6 +227,7 @@ function chiron_wp_add_source(){
 			print '<div id="message" class="updated below-h2"><p>Source added successfully.</p></div>';
 		}
 	}
+	
 	print "<div class='form-wrap'>";
 	print '<form method="post">';
 	print '<div class="form-field form-required"><label>URL of your new Source</label><input type="text" name="url" /><p>The URL under which your Source is awailable.</p></div>';
@@ -183,10 +240,46 @@ function chiron_wp_add_source(){
 	print "</div> <!-- // .wrap -->";
 }
 
+function chiron_wp_edit_source(){
+	global $chiron;
+	print "<div class='wrap'>";
+	print "<h2>Edit Source</h2>";
+	
+	if(isset($_POST) && !empty($_POST)){
+		$source = new chiron_source();
+		$source->id = $_GET['source_id'];
+		$source->title = $_POST['title'];
+		$source->url = $_POST['url'];
+		$result = $source->update();
+		if($result == "1"){
+			print '<div id="message" class="updated below-h2"><p>Source updated successfully.</p></div>';
+		}else{
+			print '<div id="message" class="updated below-h2"><p>Source not updated.</p></div>';
+		}
+	}
+	
+	if(isset($_GET['source_id']) && !empty($_GET['source_id'])){
+		$source_id = $_GET['source_id'];
+		$source = new chiron_source($source_id);
+		print "<div class='form-wrap'>";
+		print '<form method="post">';
+		print '<div class="form-field form-required"><label>New URL of your Source</label><input type="text" name="url" value="'.$source->url.'"/><p>The URL under which your Source is awailable.</p></div>';
+		print '<div class="form-field form-required"><label>New Title of your Source</label><input type="text" name="title" value="'.$source->title.'"><p>If you leave it blank, the Title will be created from the Source itself. You may edit it later on.</p></div>';
+		print '<input type="submit">';
+		print '</form>';
+		print "</div> <!-- // .form-wrap -->";
+		
+	}else{
+		print "<p>No Source selected for editing.</p>";
+	}
+	print "</div> <!-- // .wrap -->";
+}
+
+
 function chiron_wp_refresh_sources(){
 	global $chiron;
 	print "<div class='wrap'>";
-	print "<h2>Updating Sources</h2>";
+	print "<h2>Refreshing some Sources</h2>";
 	$sources = $chiron->sources_run_cron();
 	foreach($sources as $source){
 		print "<p>Updating Source <strong>".$source->title."</strong> … added ".$source->lastadded." items.";
@@ -196,13 +289,16 @@ function chiron_wp_refresh_sources(){
 		print "</p>";
 	}
 	
+	print '<form method="post"><input  class="button button-primary" type="submit" value="Refresh some more Sources" ></form>';
+
+	
 	print "</div> <!-- // .wrap -->";
 }
 
 
 function chiron_wp_refresh_source(){
 	print "<div class='wrap'>";
-	print "<h2>Updating Source</h2>";
+	print "<h2>Refresh Source</h2>";
 	if(isset($_GET['source_id']) && !empty($_GET['source_id'])){
 		$source_id = $_GET['source_id'];
 		$source = new chiron_source($source_id);
@@ -214,7 +310,7 @@ function chiron_wp_refresh_source(){
 		print "</p>";
 		
 	}else{
-		print "<p>No Source selected for Update</p>";
+		print "<p>No Source selected for refreshing.</p>";
 	}
 	print "</div> <!-- // .wrap -->";
 }

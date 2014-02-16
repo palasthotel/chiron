@@ -23,6 +23,12 @@ class chiron_source_db{
 		return $result;
 	}
 	
+	public function source_update($id, $title, $type, $url){
+		global $chiron_db;
+		$query = "UPDATE ".$chiron_db->prefix."chiron_source set title = '".$title."', url='".$url."' WHERE id = ".$id."";
+		return $chiron_db->query($query) or print("Query failed: ".mysql_error()." Query:".$query);
+	}
+	
 	public function set_lastchecked($id, $timestamp){
 		global $chiron_db;
 		$query = "UPDATE ".$chiron_db->prefix."chiron_source set lastchecked = ".$timestamp." WHERE id = ".$id."";

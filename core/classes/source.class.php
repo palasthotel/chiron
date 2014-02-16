@@ -50,10 +50,15 @@ class chiron_source {
   }
 
   public function update(){ 
-       $query = "UPDATE  `source` SET `title` = '".$this->title."',  `url`  =  '".$this->url."' WHERE `id` = '".$feed->id."';";
-       print_r($query);
-       $result = mysql_query($query) or print('Query failed: ' . mysql_error());
+       if($this->exists()){
+		if($this->type == ""){
+			$this->type = "1";
+		}
+       $this->chiron_source_db->source_update($this->id, $this->title, $this->type, $this->url);
        return 1;   
+     }else{
+       return 0;
+     } 
   }
 
   public function refresh(){

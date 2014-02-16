@@ -51,6 +51,21 @@ class chiron_core_db {
 			return $chiron_db->fetch_array();
 		}
 		
+		public function items_get_by_day($day){
+			global $chiron_db;
+			$start = strtotime($day." 00:00:00");
+			$end = strtotime($day." 23:59:59");
+			$query = "SELECT * FROM ".$chiron_db->prefix."chiron_item WHERE timestamp >= '$start' AND timestamp <= '$end'";
+		    $result = $chiron_db->query($query) or print('Query failed: ' . mysql_error());  
+		 	$return = array();
+		    while($item = $chiron_db->fetch_array($result)){
+		      $object = new chiron_item('', array());
+		      $object->load($item);      
+		      $return[] = $object;
+		    }
+			return $return;
+		}
+		
 		
 }
 
