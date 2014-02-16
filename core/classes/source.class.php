@@ -7,10 +7,17 @@ class chiron_source {
   public $url;  
   public $lastchecked;
   public $feed_meta;
+	public $status;
+	public $lastadded;
+	public $error;
   public $chiron_source_db;
 
-  	public function __construct(){
+  	public function __construct($id = ""){
 		$this->chiron_source_db = new chiron_source_db();
+		if($id!=""){
+			$array = $this->chiron_source_db->source_load($id);
+			$this->load($array);
+		}
 	}
 
   public function load($array) {
@@ -52,7 +59,6 @@ class chiron_source {
   public function refresh(){
        $items = array();
 
-
        $feed = new SimplePie();
        $feed->set_feed_url($this->url);
        $feed->init();
@@ -69,11 +75,20 @@ class chiron_source {
           $converted->source=$this->id;
           $counter += $converted->add();      
        }
+		
+		$this->lastadded = $counter;
+		if($feed->error!=""){
+			$this->set_status("broken");
+			$this->error = $feed->error;
+		}
 
        $this->chiron_source_db->set_lastchecked($this->id, time());
        return $counter;
      }
   
+	public function set_status($status){
+		$this->chiron_source_db->set_status($this->id, $status);
+	}
   
   // Feed Meta Actions
     

@@ -61,8 +61,10 @@ function chiron_wp_admin_menu()
 		add_submenu_page('chiron_dashboard', 'News-Dashboard', 'News-Dashboard', 'read', 'chiron_dashboard', 'chiron_wp_dashboard' );
 		add_submenu_page('chiron_dashboard', 'Manage Sources', 'Manage Sources', 'read', 'chiron_manage_sources', 'chiron_wp_manage_sources' );
 		add_submenu_page('chiron_dashboard', 'Add new Source', 'Add new Source', 'read', 'chiron_add_source', 'chiron_wp_add_source' );
+		add_submenu_page('chiron_dashboard', 'Refresh Sources', 'Refresh Sources', 'read', 'chiron_refresh_sources', 'chiron_wp_refresh_sources' );
 		add_submenu_page('chiron_dashboard', 'Manage Categories', 'Manage Categories', 'read', 'chiron_manage_categories', 'chiron_wp_manage_categories' );
 		add_submenu_page('chiron_dashboard', 'Settings', 'Settings', 'read', 'chiron_manage_subscriptions', 'chiron_wp_settings' );
+		add_submenu_page('chiron_dashboard', 'Debugging', 'Debugging', 'read', 'chiron_debugging', 'chiron_wp_debug' );
 		
 		add_submenu_page('null', 'Refresh Source', 'Refresh Source', 'read', 'chiron_refresh_source', 'chiron_wp_refresh_source' );
 }
@@ -70,8 +72,12 @@ function chiron_wp_admin_menu()
 add_action("admin_menu","chiron_wp_admin_menu");
 
 function chiron_wp_dashboard(){
+	global $chiron;
 	print "<div class='wrap'>";
 	print "<h2>Welcome to your News-Dashboard, young Hero or Heroine!</h2>";
+	$sources_count = $chiron->sources_count();
+	$items_count = $chiron->items_count();
+	print "<p>You have <strong>".$sources_count[0]." sources</strong> to learn from and <strong>".$items_count[0]." items</strong> to read.</p>";
 	print "</div>";
 }
 
@@ -90,6 +96,8 @@ function chiron_wp_manage_sources(){
 		print '<th>Titel</th>';
 		print '<th>URL</th>';
 		print '<th>Last Checked</th>';
+		print '<th>Status</th>';
+		print "<th>Operations</th>";
 		print '</tr>';
 		print '</thead>';
 		$oddoreven = "odd";
@@ -108,6 +116,8 @@ function chiron_wp_manage_sources(){
 				$date = "never";
 			}
 			print "<td>".$date."</td>";
+			print "<td>".$source['status']."</td>";
+			print "<td>edit | <a href='?page=chiron_refresh_source&source_id=".$source['id']."'>refresh</a></td>";
 			print "</tr>";
 			if($oddoreven == "odd"){
 				$oddoreven = "even";
@@ -120,6 +130,8 @@ function chiron_wp_manage_sources(){
 		print '<th>Titel</th>';
 		print '<th>URL</th>';
 		print '<th>Last Checked</th>';
+		print '<th>Status</th>';
+		print "<th>Operations</th>";
 		print '</tr>';
 		print '</tfoot>';
 		print "</table>";
@@ -171,13 +183,76 @@ function chiron_wp_add_source(){
 	print "</div> <!-- // .wrap -->";
 }
 
-function chiron_wp_refresh_source(){
-	if(isset($_GET) && !empty($_GET)){
-		if($_GET['source']!=""){
-			$source = new chiron_source();
-			$source->id = "4";
-			$source->url = "http://anmutunddemut.de/feed/atom";
-			$source->refresh();
+function chiron_wp_refresh_sources(){
+	global $chiron;
+	print "<div class='wrap'>";
+	print "<h2>Updating Sources</h2>";
+	$sources = $chiron->sources_run_cron();
+	foreach($sources as $source){
+		print "<p>Updating Source <strong>".$source->title."</strong> … added ".$source->lastadded." items.";
+		if($source->error!=""){
+			print "<br/>Error:</strong> ".$source->error."";
 		}
+		print "</p>";
 	}
+	
+	print "</div> <!-- // .wrap -->";
 }
+
+
+function chiron_wp_refresh_source(){
+	print "<div class='wrap'>";
+	print "<h2>Updating Source</h2>";
+	if(isset($_GET['source_id']) && !empty($_GET['source_id'])){
+		$source_id = $_GET['source_id'];
+		$source = new chiron_source($source_id);
+		$source->refresh();
+		print "<p>Updating Source <strong>".$source->title."</strong> … added ".$source->lastadded." items.";
+		if($source->error!=""){
+			print "<br/>Error:</strong> ".$source->error."";
+		}
+		print "</p>";
+		
+	}else{
+		print "<p>No Source selected for Update</p>";
+	}
+	print "</div> <!-- // .wrap -->";
+}
+
+function chiron_wp_debug(){
+	print "<div class='wrap'>";
+	print "<h2>Debugging Chiron</h2>";
+	echo '<pre>'; 
+	print_r(wp_get_schedules()); 
+	echo'</pre>';
+	print "</div> <!-- // .wrap -->";
+}
+
+
+// Everything WP-Cron-Job from here
+ 
+function chiron_wp_add_cron_intervals( $schedules ) {
+ 	$schedules['5minutes']['interval'] = 300;
+	$schedules['5minutes']['display'] = __('Every 5 Minutes');
+	return $schedules; // Do not forget to give back the list of schedules!
+}
+
+add_filter( 'cron_schedules', 'chiron_wp_add_cron_intervals' );
+
+add_action( 'chiron_cron_hook', 'chiron_wp_cron_exec' );
+
+if( !wp_next_scheduled( 'chiron_cron_hook' ) ) {
+	wp_schedule_event( time(), '5minutes', 'chiron_cron_hook' );
+}
+
+
+function chiron_wp_cron_exec(){
+	global $chiron;
+	$sources = $chiron->sources_run_cron();
+}
+
+
+
+
+
+

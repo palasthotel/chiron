@@ -61,6 +61,24 @@ class chiron_core {
     return $items;
   }
 
+	public function items_count(){
+		$count = $this->chiron_core_db->items_count();
+		return $count;
+	}
+	
+	public function sources_count(){
+		$count = $this->chiron_core_db->sources_count();
+		return $count;
+	}
+
+	public function sources_run_cron(){
+		$sources = $this->chiron_core_db->sources_get_least_updated("5");
+		foreach($sources as $source){
+			$source->refresh();
+		}
+		return $sources;
+	}
+
   public function perform_cron() {
     $query = "SELECT * FROM source ORDER BY last_updated ASC limit ".FEEDS_PER_CRON.";";
     $result = mysql_query($query) or print('Query failed: '.mysql_error());
