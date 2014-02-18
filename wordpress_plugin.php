@@ -118,7 +118,7 @@ function chiron_wp_dashboard(){
 	$tomorrow = date("Y-m-d", $timestamp + (60*60*24));
 	print '<div class="tablenav-pages">';
 	print " <a class='prev-page' href='?page=chiron_dashboard&day=".$yesterday."'>‹</a> ";
-	print '<span class="paging-input">'."News of ".	date("l")." the ".date("j. F Y", $timestamp)."</span>";
+	print '<span class="paging-input">'."News of ".	date("l", $timestamp)." the ".date("j. F Y", $timestamp)."</span>";
 	if($tomorrow != date("Y-m-d", time())){
 	    print " <a class='next-page' href='?page=chiron_dashboard&day=".$tomorrow."'>›</a>";
 	}
@@ -126,7 +126,7 @@ function chiron_wp_dashboard(){
 	print ("</div>");
 	print ("</div>");
 	
-	$day = date("Y-m-d", $timestamp-60*60*24);
+	$day = date("Y-m-d", $timestamp);
 	$chiron->sources_get_all();
 	$chiron->items_get_by_day($day);
 	if(count($chiron->items)>0){
