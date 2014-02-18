@@ -1,16 +1,16 @@
 <?php 
 
 class chiron_source {
-  public $id;
-  public $type;
-  public $title;
-  public $url;  
-  public $lastchecked;
-  public $feed_meta;
+  	public $id;
+  	public $type;
+  	public $title;
+  	public $url;  
+  	public $lastchecked;
+  	public $feed_meta;
 	public $status;
 	public $lastadded;
 	public $error;
-  public $chiron_source_db;
+  	public $chiron_source_db;
 
   	public function __construct($id = ""){
 		$this->chiron_source_db = new chiron_source_db();
@@ -49,16 +49,9 @@ class chiron_source {
      }
   }
 
-  public function update(){ 
-       if($this->exists()){
-		if($this->type == ""){
-			$this->type = "1";
-		}
-       $this->chiron_source_db->source_update($this->id, $this->title, $this->type, $this->url);
-       return 1;   
-     }else{
-       return 0;
-     } 
+  public function update(){
+  	$this->chiron_source_db->source_update($this->id, $this->title, $this->url);
+    return 1;         
   }
 
   public function refresh(){
@@ -85,6 +78,8 @@ class chiron_source {
 		if($feed->error!=""){
 			$this->set_status("broken");
 			$this->error = $feed->error;
+		}else{
+			$this->set_status("ok");
 		}
 
        $this->chiron_source_db->set_lastchecked($this->id, time());

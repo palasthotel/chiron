@@ -19,8 +19,8 @@ class chiron_item {
 
   public function load($array){
     $this->id = $array['id'];
-    $this->source = $array['source'];
-    $this->date = $array['date'];
+    $this->source = $array['id_source'];
+    $this->date = $array['timestamp'];
     $this->title = $array['title'];
     $this->text = $array['text'];
     $this->url = $array['url'];

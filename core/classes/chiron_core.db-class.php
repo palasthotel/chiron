@@ -8,6 +8,8 @@ class chiron_core_db {
 			
 		}
 		
+		// Methods for Sources
+		
 		public function sources_count(){
 			global $chiron_db;
 			$query = "SELECT count(id) FROM `".$chiron_db->prefix."chiron_source`";
@@ -43,6 +45,8 @@ class chiron_core_db {
 		}
 		
 		
+		// Methods for Items
+		
 		
 		public function items_count(){
 			global $chiron_db;
@@ -61,6 +65,22 @@ class chiron_core_db {
 		    while($item = $chiron_db->fetch_array($result)){
 		      $object = new chiron_item('', array());
 		      $object->load($item);      
+		      $return[] = $object;
+		    }
+			return $return;
+		}
+		
+		
+		// Methods for Categories
+		
+		public function categories_get_all_by_user($uid){
+			global $chiron_db;
+			$query = "SELECT * FROM ".$chiron_db->prefix."chiron_source_category WHERE id_user = ".$uid." ORDER BY weight ASC;";
+			$result = $chiron_db->query($query) or print('Query failed: ' . mysql_error());  
+		 	$return = array();
+		    while($array = $chiron_db->fetch_array($result)){
+		      $object = new chiron_category();
+		      $object->load($array);      
 		      $return[] = $object;
 		    }
 			return $return;

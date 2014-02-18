@@ -8,6 +8,8 @@ include 'chiron_core.class.php';
 include 'chiron_core.db-class.php';
 include 'source.class.php';
 include 'source.db-class.php';
+include 'category.class.php';
+include 'category.db-class.php';
 include 'item.class.php';
 include 'item.db-class.php';
 include 'user.php';
