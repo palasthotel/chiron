@@ -85,96 +85,73 @@ class chiron_db {
 
 		// Table for Source Category	
 		// Within the Default Setup there are two Types of Sources:
-		$this->schema['chiron_source_category'] = array();
-		$this->schema['chiron_source_category']['description'] = t('Stores all Source Categories');
-		$this->schema['chiron_source_category']['primary key'] = array('id');
-		$this->schema['chiron_source_category']['mysql_engine'] = 'InnoDB';
-		$this->schema['chiron_source_category']['fields'] = array();
+		$this->schema['chiron_category'] = array();
+		$this->schema['chiron_category']['description'] = t('Stores all Categories');
+		$this->schema['chiron_category']['primary key'] = array('id');
+		$this->schema['chiron_category']['mysql_engine'] = 'InnoDB';
+		$this->schema['chiron_category']['fields'] = array();
 
-		$this->schema['chiron_source_category']['fields']['id'] = array();
-		$this->schema['chiron_source_category']['fields']['id']['description'] = t('source category id');
-		$this->schema['chiron_source_category']['fields']['id']['type'] = 'serial';
-		$this->schema['chiron_source_category']['fields']['id']['size'] = 'normal';
-		$this->schema['chiron_source_category']['fields']['id']['not null'] = true;
-		$this->schema['chiron_source_category']['fields']['id']['unsigned'] = false;
+		$this->schema['chiron_category']['fields']['id'] = array();
+		$this->schema['chiron_category']['fields']['id']['description'] = t('category id');
+		$this->schema['chiron_category']['fields']['id']['type'] = 'serial';
+		$this->schema['chiron_category']['fields']['id']['size'] = 'normal';
+		$this->schema['chiron_category']['fields']['id']['not null'] = true;
+		$this->schema['chiron_category']['fields']['id']['unsigned'] = false;
 
-		$this->schema['chiron_source_category']['fields']['id_user'] = array();
-		$this->schema['chiron_source_category']['fields']['id_user']['description'] = t('user id');
-		$this->schema['chiron_source_category']['fields']['id_user']['type'] = 'int';
-		$this->schema['chiron_source_category']['fields']['id_user']['size'] = 'normal';
-		$this->schema['chiron_source_category']['fields']['id_user']['not null'] = true;
-		$this->schema['chiron_source_category']['fields']['id_user']['unsigned'] = false;
+		$this->schema['chiron_category']['fields']['id_user'] = array();
+		$this->schema['chiron_category']['fields']['id_user']['description'] = t('user id');
+		$this->schema['chiron_category']['fields']['id_user']['type'] = 'int';
+		$this->schema['chiron_category']['fields']['id_user']['size'] = 'normal';
+		$this->schema['chiron_category']['fields']['id_user']['not null'] = true;
+		$this->schema['chiron_category']['fields']['id_user']['unsigned'] = false;
 
-		$this->schema['chiron_source_category']['fields']['title'] = array();
-		$this->schema['chiron_source_category']['fields']['title']['description'] = t('source category title');
-		$this->schema['chiron_source_category']['fields']['title']['type'] = 'text';
-		$this->schema['chiron_source_category']['fields']['title']['size'] = 'normal';
+		$this->schema['chiron_category']['fields']['title'] = array();
+		$this->schema['chiron_category']['fields']['title']['description'] = t('category title');
+		$this->schema['chiron_category']['fields']['title']['type'] = 'text';
+		$this->schema['chiron_category']['fields']['title']['size'] = 'normal';
 
-		$this->schema['chiron_source_category']['fields']['weight'] = array();
-		$this->schema['chiron_source_category']['fields']['weight']['description'] = t('user id');
-		$this->schema['chiron_source_category']['fields']['weight']['type'] = 'int';
-		$this->schema['chiron_source_category']['fields']['weight']['size'] = 'normal';
-		$this->schema['chiron_source_category']['fields']['weight']['not null'] = true;
-		$this->schema['chiron_source_category']['fields']['weight']['unsigned'] = false;
-
-
-
-		// Table to map Categories to Sources
-		$this->schema['chiron_source2category'] = array();
-		$this->schema['chiron_source2category']['description'] = t('Stores all Source Categories');
-		$this->schema['chiron_source2category']['primary key'] = array('id');
-		$this->schema['chiron_source2category']['mysql_engine'] = 'InnoDB';
-		$this->schema['chiron_source2category']['fields'] = array();
-
-		$this->schema['chiron_source2category']['fields']['id'] = array();
-		$this->schema['chiron_source2category']['fields']['id']['description'] = t('source category id');
-		$this->schema['chiron_source2category']['fields']['id']['type'] = 'serial';
-		$this->schema['chiron_source2category']['fields']['id']['size'] = 'normal';
-		$this->schema['chiron_source2category']['fields']['id']['not null'] = true;
-		$this->schema['chiron_source2category']['fields']['id']['unsigned'] = false;
-
-		$this->schema['chiron_source2category']['fields']['id_source'] = array();
-		$this->schema['chiron_source2category']['fields']['id_source']['description'] = t('source id');
-		$this->schema['chiron_source2category']['fields']['id_source']['type'] = 'int';
-		$this->schema['chiron_source2category']['fields']['id_source']['size'] = 'normal';
-		$this->schema['chiron_source2category']['fields']['id_source']['not null'] = true;
-		$this->schema['chiron_source2category']['fields']['id_source']['unsigned'] = false;
-
-		$this->schema['chiron_source2category']['fields']['id_category'] = array();
-		$this->schema['chiron_source2category']['fields']['id_category']['description'] = t('source id');
-		$this->schema['chiron_source2category']['fields']['id_category']['type'] = 'int';
-		$this->schema['chiron_source2category']['fields']['id_category']['size'] = 'normal';
-		$this->schema['chiron_source2category']['fields']['id_category']['not null'] = true;
-		$this->schema['chiron_source2category']['fields']['id_category']['unsigned'] = false;
-
+		$this->schema['chiron_category']['fields']['weight'] = array();
+		$this->schema['chiron_category']['fields']['weight']['description'] = t('weight id');
+		$this->schema['chiron_category']['fields']['weight']['type'] = 'int';
+		$this->schema['chiron_category']['fields']['weight']['size'] = 'normal';
+		$this->schema['chiron_category']['fields']['weight']['not null'] = true;
+		$this->schema['chiron_category']['fields']['weight']['unsigned'] = false;
+		
 
 		// Table to map Subscriptions
 		$this->schema['chiron_subscription'] = array();
-		$this->schema['chiron_subscription']['description'] = t('Stores all Source Categories');
+		$this->schema['chiron_subscription']['description'] = t('Stores all subscriptions');
 		$this->schema['chiron_subscription']['primary key'] = array('id');
 		$this->schema['chiron_subscription']['mysql_engine'] = 'InnoDB';
 		$this->schema['chiron_subscription']['fields'] = array();
 
 		$this->schema['chiron_subscription']['fields']['id'] = array();
-		$this->schema['chiron_subscription']['fields']['id']['description'] = t('source category id');
+		$this->schema['chiron_subscription']['fields']['id']['description'] = t('subscriptions id');
 		$this->schema['chiron_subscription']['fields']['id']['type'] = 'serial';
 		$this->schema['chiron_subscription']['fields']['id']['size'] = 'normal';
 		$this->schema['chiron_subscription']['fields']['id']['not null'] = true;
 		$this->schema['chiron_subscription']['fields']['id']['unsigned'] = false;
 
-		$this->schema['chiron_source2category']['fields']['id_source'] = array();
-		$this->schema['chiron_source2category']['fields']['id_source']['description'] = t('source id');
-		$this->schema['chiron_source2category']['fields']['id_source']['type'] = 'int';
-		$this->schema['chiron_source2category']['fields']['id_source']['size'] = 'normal';
-		$this->schema['chiron_source2category']['fields']['id_source']['not null'] = true;
-		$this->schema['chiron_source2category']['fields']['id_source']['unsigned'] = false;
+		$this->schema['chiron_subscription']['fields']['id_source'] = array();
+		$this->schema['chiron_subscription']['fields']['id_source']['description'] = t('Source id');
+		$this->schema['chiron_subscription']['fields']['id_source']['type'] = 'int';
+		$this->schema['chiron_subscription']['fields']['id_source']['size'] = 'normal';
+		$this->schema['chiron_subscription']['fields']['id_source']['not null'] = true;
+		$this->schema['chiron_subscription']['fields']['id_source']['unsigned'] = false;
 
-		$this->schema['chiron_source2category']['fields']['id_user'] = array();
-		$this->schema['chiron_source2category']['fields']['id_user']['description'] = t('source id');
-		$this->schema['chiron_source2category']['fields']['id_user']['type'] = 'int';
-		$this->schema['chiron_source2category']['fields']['id_user']['size'] = 'normal';
-		$this->schema['chiron_source2category']['fields']['id_user']['not null'] = true;
-		$this->schema['chiron_source2category']['fields']['id_user']['unsigned'] = false;
+		$this->schema['chiron_subscription']['fields']['id_user'] = array();
+		$this->schema['chiron_subscription']['fields']['id_user']['description'] = t('user id');
+		$this->schema['chiron_subscription']['fields']['id_user']['type'] = 'int';
+		$this->schema['chiron_subscription']['fields']['id_user']['size'] = 'normal';
+		$this->schema['chiron_subscription']['fields']['id_user']['not null'] = true;
+		$this->schema['chiron_subscription']['fields']['id_user']['unsigned'] = false;
+		
+		$this->schema['chiron_subscription']['fields']['id_category'] = array();
+		$this->schema['chiron_subscription']['fields']['id_category']['description'] = t('category id');
+		$this->schema['chiron_subscription']['fields']['id_category']['type'] = 'int';
+		$this->schema['chiron_subscription']['fields']['id_category']['size'] = 'normal';
+		$this->schema['chiron_subscription']['fields']['id_category']['not null'] = true;
+		$this->schema['chiron_subscription']['fields']['id_category']['unsigned'] = false;
 
 
 		// Table for Source Meta	
@@ -214,6 +191,7 @@ class chiron_db {
 		$this->schema['chiron_source_meta']['fields']['meta_value']['description'] = t('source meta value');
 		$this->schema['chiron_source_meta']['fields']['meta_value']['type'] = 'text';
 		$this->schema['chiron_source_meta']['fields']['meta_value']['size'] = 'normal';
+
 
 		// Table for Items
 		$this->schema['chiron_item'] = array();
@@ -257,6 +235,7 @@ class chiron_db {
 		$this->schema['chiron_item']['fields']['url']['description'] = t('item url');
 		$this->schema['chiron_item']['fields']['url']['type'] = 'text';
 		$this->schema['chiron_item']['fields']['url']['size'] = 'normal';	
+		
 
 		// Table for Item Meta	
 		$this->schema['chiron_item_meta'] = array();
