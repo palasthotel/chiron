@@ -57,19 +57,41 @@ register_activation_hook(__FILE__, "chiron_wp_activate");
 
 function chiron_wp_admin_menu()
 {        
+		// Main Backend Menu Item
         add_menu_page('Reader','Chiron','read','chiron_dashboard','chiron_wp_dashboard', 'dashicons-book-alt', '76');
+		// Submenu Items
 		add_submenu_page('chiron_dashboard', 'News-Dashboard', 'News-Dashboard', 'read', 'chiron_dashboard', 'chiron_wp_dashboard' );
 		add_submenu_page('chiron_dashboard', 'Manage Sources', 'Manage Sources', 'read', 'chiron_manage_sources', 'chiron_wp_manage_sources' );
 		add_submenu_page('chiron_dashboard', 'Add new Source', 'Add new Source', 'read', 'chiron_add_source', 'chiron_wp_add_source' );
 		add_submenu_page('chiron_dashboard', 'Refresh Sources', 'Refresh Sources', 'read', 'chiron_refresh_sources', 'chiron_wp_refresh_sources' );
 		add_submenu_page('chiron_dashboard', 'Manage Categories', 'Manage Categories', 'read', 'chiron_manage_categories', 'chiron_wp_manage_categories' );
+		add_submenu_page('chiron_dashboard', 'Add new Category', 'Add new Category', 'read', 'chiron_add_category', 'chiron_wp_add_category' );
 		add_submenu_page('chiron_dashboard', 'Settings', 'Settings', 'read', 'chiron_manage_subscriptions', 'chiron_wp_settings' );
 		add_submenu_page('chiron_dashboard', 'Debugging', 'Debugging', 'read', 'chiron_debugging', 'chiron_wp_debug' );
+		// Functions which need not be available via Wordpress' Admin Menu
 		add_submenu_page('null', 'Edit Source', 'Edit Source', 'read', 'chiron_edit_source', 'chiron_wp_edit_source' );
 		add_submenu_page('null', 'Refresh Source', 'Refresh Source', 'read', 'chiron_refresh_source', 'chiron_wp_refresh_source' );
+		add_submenu_page('null', 'Edit Category', 'Edit Category', 'read', 'chiron_edit_category', 'chiron_wp_edit_category' );
 }
 
 add_action("admin_menu","chiron_wp_admin_menu");
+
+function chiron_wp_debug(){
+	print "<div class='wrap'>";
+	print "<h2>Debugging Chiron</h2>";
+	echo '<pre>'; 
+	print_r(wp_get_schedules()); 
+	echo'</pre>';
+	print "</div> <!-- // .wrap -->";
+}
+
+function chiron_wp_settings(){
+	print "<div class='wrap'>";
+	print "<h2>Chiron Settings</h2>";
+	print "<p>Manage your Settings, young Hero or Heroine!</p>";
+	print "</div> <!-- // .wrap -->";
+}
+
 
 function chiron_wp_dashboard(){
 	global $chiron;
@@ -90,34 +112,41 @@ function chiron_wp_dashboard(){
 	  }
 	  $timestamp = strtotime($date);
 	
-	
-	print("<p class='pagination'>");    
-	  $yesterday = date("Y-m-d", $timestamp - 60*60*24);
-	  $tomorrow = date("Y-m-d", $timestamp + (60*60*24));
-	  print " <a class='backwards pager' href='?page=chiron_dashboard&day=".$yesterday."'>«</a> ";
-	  print "News of the ".	date("Y-m-d", $timestamp);
-	  if($tomorrow != date("Y-m-d", time())){
-	    print " <a class='forwards pager' href='?page=chiron_dashboard&day=".$tomorrow."'>»</a>";
-	  }
-	 print ("</p>");
+	print('<div class="tablenav">');    
+	print('<div class="tablenav-pages">');    
+	$yesterday = date("Y-m-d", $timestamp - 60*60*24);
+	$tomorrow = date("Y-m-d", $timestamp + (60*60*24));
+	print '<div class="tablenav-pages">';
+	print " <a class='prev-page' href='?page=chiron_dashboard&day=".$yesterday."'>‹</a> ";
+	print '<span class="paging-input">'."News of ".	date("l")." the ".date("j. F Y", $timestamp)."</span>";
+	if($tomorrow != date("Y-m-d", time())){
+	    print " <a class='next-page' href='?page=chiron_dashboard&day=".$tomorrow."'>›</a>";
+	}
+	print ("</div>");
+	print ("</div>");
+	print ("</div>");
 	
 	$day = date("Y-m-d", $timestamp-60*60*24);
+	$chiron->sources_get_all();
 	$chiron->items_get_by_day($day);
 	if(count($chiron->items)>0){
 		print "<table class='wp-list-table widefat'>";
 		print '<thead>';
 		print '<tr>';
-		print '<th>Titel</th>';
+		print '<th>Source</th>';
+		print '<th>Title</th>';
 		print '</tr>';
 		print '</thead>';
 		$oddoreven = "odd";
 		foreach($chiron->items as $item){
+
 			$rowclasses = array();
 			if($oddoreven == "odd"){
 				$rowclasses[] = "alternate";
 			}
 			$classes = implode(" ", $rowclasses);
 			print "<tr class='".$classes."'>";
+			print "<td>".$chiron->sources[$item->source]['title']."</td>";
 			print "<td><a href='".$item->url."'>".$item->title."</a></td>";
 			print "</tr>";
 			if($oddoreven == "odd"){
@@ -126,9 +155,12 @@ function chiron_wp_dashboard(){
 				$oddoreven = "odd";
 			}
 		}
+		//print_r($chiron->sources);
+		//			print_r($item);
 		print '<tfoot>';
 		print '<tr>';
-		print '<th>Titel</th>';		
+		print '<th>Source</th>';
+		print '<th>Title</th>';		
 		print '</tr>';
 		print '</tfoot>';
 		print "</table>";
@@ -137,6 +169,8 @@ function chiron_wp_dashboard(){
 	print "</div>";
 }
 
+
+// Sources from here on
 
 function chiron_wp_manage_sources(){
 	global $chiron;
@@ -196,23 +230,6 @@ function chiron_wp_manage_sources(){
 }
 
 
-
-function chiron_wp_settings(){
-	print "<div class='wrap'>";
-	print "<h2>Chiron Settings</h2>";
-	print "<p>Manage your Settings, young Hero or Heroine!</p>";
-	print "</div> <!-- // .wrap -->";
-}
-
-
-function chiron_wp_manage_categories(){
-	print "<div class='wrap'>";
-	print "<h2>Categories of your Sources <a class='add-new-h2' href='#'>Add New</a></h2>";
-	print "<p>Manage the Categoreis of your Sources, young Hero or Heroine!</p>";
-	print "</div> <!-- // .wrap -->";
-}
-
-
 function chiron_wp_add_source(){
 	global $chiron;
 	print "<div class='wrap'>";
@@ -234,9 +251,7 @@ function chiron_wp_add_source(){
 	print '<div class="form-field form-required"><label>Title of your new Source</label><input type="text" name="title"><p>If you leave it blank, the Title will be created from the Source itself. You may edit it later on.</p></div>';
 	print '<input type="submit">';
 	print '</form>';
-	print "</div> <!-- // .form-wrap -->";
-		
-	
+	print "</div> <!-- // .form-wrap -->";	
 	print "</div> <!-- // .wrap -->";
 }
 
@@ -254,7 +269,7 @@ function chiron_wp_edit_source(){
 		if($result == "1"){
 			print '<div id="message" class="updated below-h2"><p>Source updated successfully.</p></div>';
 		}else{
-			print '<div id="message" class="updated below-h2"><p>Source not updated.</p></div>';
+			print '<div id="message" class="updated below-h2"><p>Source <strong>not</strong> updated.</p></div>';
 		}
 	}
 	
@@ -315,12 +330,118 @@ function chiron_wp_refresh_source(){
 	print "</div> <!-- // .wrap -->";
 }
 
-function chiron_wp_debug(){
+
+
+// Everything Categories beyond here
+
+function chiron_wp_manage_categories(){
+	global $chiron;
+	$user = wp_get_current_user(); 
+	$uid = $user->data->ID;
 	print "<div class='wrap'>";
-	print "<h2>Debugging Chiron</h2>";
-	echo '<pre>'; 
-	print_r(wp_get_schedules()); 
-	echo'</pre>';
+	print "<h2>Categories of your Sources <a class='add-new-h2' href='?page=chiron_add_category'>Add New</a></h2>";
+	print "<p>Manage the Categories of your Sources, young Hero or Heroine!</p>";
+	$categories = $chiron->categories_get_all_by_user($uid);
+	$no = count($categories);
+	if($no>0){
+		print "<table class='wp-list-table widefat'>";
+		print '<thead>';
+		print '<tr>';
+		print '<th>Titel</th>';
+		print '<th>Weight</th>';
+		print "<th>Operations</th>";
+		print '</tr>';
+		print '</thead>';
+		$oddoreven = "odd";
+		foreach($categories as $category){
+			$rowclasses = array();
+			if($oddoreven == "odd"){
+				$rowclasses[] = "alternate";
+			}
+			$classes = implode(" ", $rowclasses);
+			print "<tr class='".$classes."'>";
+			print "<td>".$category->title."</td>";
+			print "<td>".$category->weight."</td>";
+			print "<td><a href='?page=chiron_edit_category&category_id=".$category->id."'>edit</a></td>";
+			print "</tr>";
+			if($oddoreven == "odd"){
+				$oddoreven = "even";
+			}else{
+				$oddoreven = "odd";
+			}
+		}
+		print '<tfoot>';
+		print '<tr>';
+		print '<th>Titel</th>';
+		print '<th>Weight</th>';	
+		print "<th>Operations</th>";
+		print '</tr>';
+		print '</tfoot>';
+		print "</table>";
+		print "<p>Remember, these are your Categories. Other Users might have other Categories for the same sources.</p>";
+	}
+	
+	print "</div> <!-- // .wrap -->";
+}
+
+function chiron_wp_add_category(){
+	global $chiron;
+	print "<div class='wrap'>";
+	print "<h2>Add a new Category</h2>";
+	$user = wp_get_current_user(); 
+	$uid = $user->data->ID;
+	if(isset($_POST) && !empty($_POST)){
+		$category = new chiron_category();
+		$category->user = $uid;
+		$category->title = $_POST['title'];
+		$category->weight = $_POST['weight'];
+		$result = $category->add();
+		if($result == "1"){
+			print '<div id="message" class="updated below-h2"><p>Category added successfully.</p></div>';
+		}
+	}
+	
+	print "<div class='form-wrap'>";
+	print '<form method="post">';
+	print '<div class="form-field form-required"><label>Title of your new Category</label><input type="text" name="title"><p>The Title of your Category, actually there is nothing more to it.</p></div>';
+	print '<div class="form-field form-required"><label>Weight of your new Category</label><input type="text" name="weight" /><p>Weight of a Category, which defines the order or Categories</p></div>';
+	print '<input type="submit">';
+	print '</form>';
+	print "</div> <!-- // .form-wrap -->";	
+	print "</div> <!-- // .wrap -->";
+}
+
+function chiron_wp_edit_category(){
+	global $chiron;
+	print "<div class='wrap'>";
+	print "<h2>Edit Category</h2>";
+	$user = wp_get_current_user(); 
+	$uid = $user->data->ID;
+	if(isset($_POST) && !empty($_POST)){
+		$category = new chiron_category();
+		$category->id = $_GET['category_id'];
+		$category->title = $_POST['title'];
+		$category->weight = $_POST['weight'];
+		$result = $category->update();
+		if($result == "1"){
+			print '<div id="message" class="updated below-h2"><p>Category added successfully.</p></div>';
+		}
+	}
+	if(isset($_GET['category_id']) && !empty($_GET['category_id'])){
+		$category_id = $_GET['category_id'];
+		$category = new chiron_category($category_id);
+		print "<div class='form-wrap'>";
+		print '<form method="post">';
+		print '<div class="form-field form-required"><label>Title of your new Category</label><input type="text" name="title" value="'.$category->title.'"><p>The new Title of your Category, actually there is nothing more to it.</p></div>';
+		print '<div class="form-field form-required"><label>Weight of your new Category</label><input type="text" name="weight" value="'.$category->weight.'"/><p>The new Weight of a Category, which defines the order or Categories</p></div>';
+		print '<input type="submit">';
+		print '</form>';
+		print "</div> <!-- // .form-wrap -->";	
+		
+	}else{
+		print "<p>No Category selected for editin.</p>";
+	}
+	
 	print "</div> <!-- // .wrap -->";
 }
 
