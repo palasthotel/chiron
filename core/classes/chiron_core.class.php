@@ -39,32 +39,19 @@ class chiron_core {
 
 	// Methods for multiple Items
 	
-	public function items_get_latest($limit=10){
-    	if(isset($this->feeds[0]) and $this->feeds[0]!=""){
-      		$query = "SELECT * FROM item WHERE ";
-      		foreach($this->feeds as $source){
-        		$parts[] = "source = '".$source."' ";
-      		}
-      		$query .= implode(" OR ", $parts) ;   
-      		$query .= "ORDER BY date DESC, id DESC LIMIT ".$limit;
-    	}else{
-      		$query = "SELECT * FROM item ORDER BY date DESC, id DESC LIMIT ".$limit;
-    	}
-
-    	$items = array();
-    	if($query !=""){
-      		$result = mysql_query($query) or print('Query failed: ' . mysql_error());   
-      		while($item = mysql_fetch_array($result)){
-        		$object = new item();
-        		$object->load($item);
-        		$this->items[] = $object;
-      		}
-    	}
-    	return count($items);
-  	}
-
+	
   	public function items_get_by_day($day){
    		$this->items = $this->chiron_core_db->items_get_by_day($day);
+    	return count($this->items);
+  	}
+
+	public function items_get_by_day_and_user($day, $id_user){
+   		$this->subscriptions = $this->chiron_core_db->subscriptions_get_all_by_user($id_user);
+		$ids_sources = array();
+		foreach($this->subscriptions as $subscription){
+			$ids_sources[] = $subscription->id_source;
+		}
+		$this->items = $this->chiron_core_db->items_get_by_day_and_source($day, $ids_sources);
     	return count($this->items);
   	}
   

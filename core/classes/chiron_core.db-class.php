@@ -91,6 +91,29 @@ class chiron_core_db {
 			return $return;
 		}
 		
+		public function items_get_by_day_and_sources($day, $ids_sources){
+			global $chiron_db;
+			
+			$start = strtotime($day." 00:00:00");
+			$end = strtotime($day." 23:59:59");
+			
+			$wherese = array();
+			foreach($ids_sources as $id_source){
+				$wherese[] = "id = '".$id_source."'";
+			}
+			$where = implode(" OR ", $wherese);
+			
+			$query = "SELECT * FROM ".$chiron_db->prefix."chiron_item WHERE timestamp >= '$start' AND timestamp <= '$end' AND (".$where.")";
+		    $result = $chiron_db->query($query) or print('Query failed: ' . mysql_error());  
+		 	$return = array();
+		    while($item = $chiron_db->fetch_array($result)){
+		      $object = new chiron_item('', array());
+		      $object->load($item);      
+		      $return[] = $object;
+		    }
+			return $return;
+		}
+		
 		
 		// Methods for Categories
 		
