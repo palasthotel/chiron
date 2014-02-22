@@ -71,7 +71,13 @@ class chiron_source {
           $converted = new chiron_item();
           $converted->fill($item);
           $converted->source=$this->id;
-          $counter += $converted->add();      
+		  $result = $converted->add();      
+		  // If an item is not added, we assume that all following are also already in the DB, so we break
+		  if($result == 1){
+			$counter ++;
+		  }else{
+			break;
+		  }	
        }
 		
 		$this->lastadded = $counter;

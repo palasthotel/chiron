@@ -79,9 +79,29 @@ add_action("admin_menu","chiron_wp_admin_menu");
 function chiron_wp_debug(){
 	print "<div class='wrap'>";
 	print "<h2>Debugging Chiron</h2>";
-	echo '<pre>'; 
-	print_r(wp_get_schedules()); 
-	echo'</pre>';
+	print "<h3>Current Schedules</h3>";
+	print "<ul>";
+	$schedules = wp_get_schedules(); 
+	foreach($schedules as $slug => $plan){
+		print "<li><strong>".$plan['display']."</strong> runs every ".$plan['interval']." seconds. [".$slug."]</li>";
+	}
+	print "</ul>";
+	print "<h3>Cron</h3>";
+	$cron = get_option('cron');
+	print "<ul>";
+	foreach($cron as $timestamp => $nextcron){
+		if($timestamp != "version"){
+			print "<li>On ".date("d-m-Y, h:i:s", (int) $timestamp)." shallst run ";
+			foreach($nextcron as $hook => $details){
+				print $hook." ";
+			}
+			print "</li>";
+		}
+	}
+	print "</ul>";
+	print "<pre>";
+	//print_r($cron);
+	print "</pre>";
 	print "</div> <!-- // .wrap -->";
 }
 
@@ -451,6 +471,8 @@ function chiron_wp_edit_category(){
 function chiron_wp_add_cron_intervals( $schedules ) {
  	$schedules['5minutes']['interval'] = 300;
 	$schedules['5minutes']['display'] = __('Every 5 Minutes');
+	$schedules['1minute']['interval'] = 60;
+	$schedules['1minute']['display'] = __('Every Minute');
 	return $schedules; // Do not forget to give back the list of schedules!
 }
 
@@ -459,7 +481,7 @@ add_filter( 'cron_schedules', 'chiron_wp_add_cron_intervals' );
 add_action( 'chiron_cron_hook', 'chiron_wp_cron_exec' );
 
 if( !wp_next_scheduled( 'chiron_cron_hook' ) ) {
-	wp_schedule_event( time(), '5minutes', 'chiron_cron_hook' );
+	wp_schedule_event( time(), '1minute', 'chiron_cron_hook' );
 }
 
 
