@@ -23,25 +23,46 @@ class chiron_core_db {
 			$sources = array();
 			$query = "SELECT * FROM ".$chiron_db->prefix."chiron_source ORDER BY title";
 	    	$result = $chiron_db->query($query) or print('Query failed: ' . mysql_error());
-	    	$feeds = array();
-	    	while($source = $chiron_db->fetch_array($result)){
-	      		$sources[$source["id"]] = $source;
-	    	}
-			return $sources;
+	    	$return = array();
+			while($source_array = $chiron_db->fetch_array($result)) {
+				$source_object = new chiron_source();
+				$source_object->load($source_array);
+				$return[$source_object->id] = $source_object;
+			}
+
+			return $return;
 		}
 		
 		public function sources_get_least_updated($number = 5){
 			global $chiron_db;
 			$query = "SELECT * FROM ".$chiron_db->prefix."chiron_source ORDER BY lastchecked ASC limit ".$number.";";
 		    $query_result = $chiron_db->query($query) or print('Query failed: '.mysql_error());
-			$result = array();
+			$return = array();
 		    while($source_array = $chiron_db->fetch_array($result)) {
 				$source_object = new chiron_source();
 				$source_object->load($source_array);
-				$result[] = $source_object;
-				
+				$return[$source_object->id] = $source_object;				
 			}
-			return $result;
+			return $return;
+		}
+		
+		public function sources_get_some_by_ids($ids_sources){
+			global $chiron_db;
+			$wherese = array();
+			foreach($ids_sources as $id_source){
+				$wherese[] = "id = '".$id_source."'";
+			}
+			$where = implode(" OR ", $wherese);
+			$query = "SELECT * FROM ".$chiron_db->prefix."chiron_source WHERE ".$where." ORDER BY title";
+		    $query_result = $chiron_db->query($query) or print('Query failed: '.mysql_error()." QUERY [".$query."]");
+			$return = array();
+		    while($source_array = $chiron_db->fetch_array($result)) {
+				$source_object = new chiron_source();
+				$source_object->load($source_array);
+				$return[$source_object->id] = $source_object;				
+			}
+			return $return;
+			
 		}
 		
 		
@@ -73,17 +94,33 @@ class chiron_core_db {
 		
 		// Methods for Categories
 		
-		public function categories_get_all_by_user($uid){
+		public function categories_get_all_by_user($id_user){
 			global $chiron_db;
-			$query = "SELECT * FROM ".$chiron_db->prefix."chiron_source_category WHERE id_user = ".$uid." ORDER BY weight ASC;";
+			$query = "SELECT * FROM ".$chiron_db->prefix."chiron_category WHERE id_user = ".$id_user." ORDER BY weight ASC";
 			$result = $chiron_db->query($query) or print('Query failed: ' . mysql_error());  
 		 	$return = array();
 		    while($array = $chiron_db->fetch_array($result)){
 		      $object = new chiron_category();
 		      $object->load($array);      
-		      $return[] = $object;
+		      $return[$object->id] = $object;
 		    }
 			return $return;
+		}
+		
+		
+		//  Methods for Subscriptions
+		
+		public function subscriptions_get_all_by_user($id_user){
+			global $chiron_db;
+			$query = "SELECT * FROM ".$chiron_db->prefix."chiron_subscription WHERE id_user = ".$id_user." ORDER BY id ASC";
+			$result = $chiron_db->query($query) or print('Query failed: ' . mysql_error());  
+		 	$return = array();
+			while($array = $chiron_db->fetch_array($result)){
+		      $object = new chiron_subscription();
+		      $object->load($array);      
+		      $return[$object->id_source] = $object;
+		    }
+			return $return;			
 		}
 		
 		

@@ -25,6 +25,7 @@ class chiron_source {
 	$this->type = $array['type'];
     $this->title = $array['title'];
     $this->url = $array['url'];    
+	$this->status = $array['status'];    
     $this->lastchecked = $array['lastchecked'];	
   }
 

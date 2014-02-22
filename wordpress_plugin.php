@@ -61,18 +61,20 @@ function chiron_wp_admin_menu()
         add_menu_page('Reader','Chiron','read','chiron_dashboard','chiron_wp_dashboard', 'dashicons-book-alt', '76');
 		// Submenu Items
 		add_submenu_page('chiron_dashboard', 'News-Dashboard', 'News-Dashboard', 'read', 'chiron_dashboard', 'chiron_wp_dashboard' );
+		add_submenu_page('chiron_dashboard', 'Manage Subscriptions', 'Manage Subscriptions', 'read', 'chiron_manage_subscriptions', 'chiron_wp_manage_subscriptions' );
 		add_submenu_page('chiron_dashboard', 'Manage Sources', 'Manage Sources', 'read', 'chiron_manage_sources', 'chiron_wp_manage_sources' );
 		add_submenu_page('chiron_dashboard', 'Add new Source', 'Add new Source', 'read', 'chiron_add_source', 'chiron_wp_add_source' );
 		add_submenu_page('chiron_dashboard', 'Refresh Sources', 'Refresh Sources', 'read', 'chiron_refresh_sources', 'chiron_wp_refresh_sources' );
 		add_submenu_page('chiron_dashboard', 'Manage Categories', 'Manage Categories', 'read', 'chiron_manage_categories', 'chiron_wp_manage_categories' );
 		add_submenu_page('chiron_dashboard', 'Add new Category', 'Add new Category', 'read', 'chiron_add_category', 'chiron_wp_add_category' );
-		add_submenu_page('chiron_dashboard', 'Settings', 'Settings', 'read', 'chiron_manage_subscriptions', 'chiron_wp_settings' );
+		add_submenu_page('chiron_dashboard', 'Settings', 'Settings', 'read', 'chiron_settings', 'chiron_wp_settings' );
 		add_submenu_page('chiron_dashboard', 'Debugging', 'Debugging', 'read', 'chiron_debugging', 'chiron_wp_debug' );
 		// Functions which need not be available via Wordpress' Admin Menu
 		add_submenu_page('null', 'Edit Source', 'Edit Source', 'read', 'chiron_edit_source', 'chiron_wp_edit_source' );
 		add_submenu_page('null', 'Refresh Source', 'Refresh Source', 'read', 'chiron_refresh_source', 'chiron_wp_refresh_source' );
 		add_submenu_page('null', 'Edit Category', 'Edit Category', 'read', 'chiron_edit_category', 'chiron_wp_edit_category' );
-}
+		add_submenu_page('null', 'Manage Subscription', 'Manage Subscription', 'read', 'chiron_manage_subscription', 'chiron_wp_manage_subscription' );
+}		
 
 add_action("admin_menu","chiron_wp_admin_menu");
 
@@ -166,7 +168,7 @@ function chiron_wp_dashboard(){
 			}
 			$classes = implode(" ", $rowclasses);
 			print "<tr class='".$classes."'>";
-			print "<td>".$chiron->sources[$item->source]['title']."</td>";
+			print "<td>".$chiron->sources[$item->source]->title."</td>";
 			print "<td><a href='".$item->url."'>".$item->title."</a></td>";
 			print "</tr>";
 			if($oddoreven == "odd"){
@@ -218,16 +220,19 @@ function chiron_wp_manage_sources(){
 			}
 			$classes = implode(" ", $rowclasses);
 			print "<tr class='".$classes."'>";
-			print "<td>".$source['title']."</td>";
-			print "<td>".$source['url']."</td>";
-			if($source['lastchecked']>0){
-				$date = date("d. m. Y H:i:s", $source['lastchecked'] );
+			print "<td>".$source->title."</td>";
+			print "<td>".$source->url."</td>";
+			if($source->lastchecked>0){
+				$date = date("d. m. Y H:i:s", $source->lastchecked);
 			}else{
 				$date = "never";
 			}
 			print "<td>".$date."</td>";
-			print "<td>".$source['status']."</td>";
-			print "<td><a href='?page=chiron_edit_source&source_id=".$source['id']."'>edit</a> | <a href='?page=chiron_refresh_source&source_id=".$source['id']."'>refresh</a></td>";
+			print "<td>".$source->status."</td>";
+			print "<td><a href='?page=chiron_edit_source&source_id=".$source->id."'>edit</a>";
+			print " | <a href='?page=chiron_refresh_source&source_id=".$source->id."'>refresh</a>";
+			print " | <a href='?page=chiron_manage_subscription&source_id=".$source->id."'>subscribe</a>";
+			print "</td>";
 			print "</tr>";
 			if($oddoreven == "odd"){
 				$oddoreven = "even";
@@ -464,6 +469,145 @@ function chiron_wp_edit_category(){
 	
 	print "</div> <!-- // .wrap -->";
 }
+
+
+function chiron_wp_manage_subscriptions(){
+	global $chiron;
+	$user = wp_get_current_user(); 
+	$uid = $user->data->ID;
+	print "<div class='wrap'>";
+	print "<h2>Manage your Subscriptions</h2>";	
+	$result = $chiron->subscriptions_get_all_by_user($uid);
+	$no = count($chiron->sources);
+	print "<p>You have subscribed ".$no." magnificent Sources of Information.</p>";
+	if($no>0){
+		print "<table class='wp-list-table widefat'>";
+		print '<thead>';
+		print '<tr>';
+		print '<th>Source</th>';
+		print '<th>Category</th>';
+		print '<th>URL</th>';
+		print '<th>Last Checked</th>';
+		print '<th>Status</th>';
+		print "<th>Operations</th>";
+		print '</tr>';
+		print '</thead>';
+		$oddoreven = "odd";
+		foreach($chiron->sources as $source){
+			$rowclasses = array();
+			if($oddoreven == "odd"){
+				$rowclasses[] = "alternate";
+			}
+			$classes = implode(" ", $rowclasses);
+			print "<tr class='".$classes."'>";			
+			print "<td><strong>".$source->title."</strong></td>";
+			print "<td>".$chiron->categories[$chiron->subscriptions[$source->id]->id_category]->title."</td>";
+			print "<td>".$source->url."</td>";
+			if($source->lastchecked>0){
+				$date = date("d. m. Y H:i:s", $source->lastchecked);
+			}else{
+				$date = "never";
+			}
+			print "<td>".$date."</td>";
+			print "<td>".$source->status."</td>";
+			print "<td>";
+			print " <a href='?page=chiron_refresh_source&source_id=".$source->id."'>refresh</a>";
+			print " | <a href='?page=chiron_manage_subscription&source_id=".$source->id."'>edit</a>";
+			print " | <a href='?page=chiron_delete_subscription&source_id=".$source->id."'>unsubscribe</a>";
+			print "</td>";
+			print "</tr>";
+			
+			if($oddoreven == "odd"){
+				$oddoreven = "even";
+			}else{
+				$oddoreven = "odd";
+			}
+		}
+		print '<tfoot>';
+		print '<tr>';
+		print '<th>Source</th>';
+		print '<th>Category</th>';
+		print '<th>URL</th>';
+		print '<th>Last Checked</th>';
+		print '<th>Status</th>';
+		print "<th>Operations</th>";
+		print '</tr>';
+		print '</tfoot>';
+		print "</table>";
+	}
+	
+	print "</div> <!-- // .wrap -->";
+	
+	print "<pre>";
+	//print_r($chiron);
+	print "</pre>";
+}
+
+
+
+// Everything Subscriptions beyond here
+
+function chiron_wp_manage_subscription(){
+	global $chiron;
+	$user = wp_get_current_user(); 
+	$uid = $user->data->ID;
+	print "<div class='wrap'>";
+	print "<h2>Manage a Subscription</h2>";
+	
+	// First check, wether there are Post-Variables
+	if(isset($_POST) && !empty($_POST) && isset($_GET['source_id']) && !empty($_GET['source_id'])){
+		$subscription = new chiron_subscription();
+		$subscription->id_user = $uid;
+		$subscription->id_source = $_GET['source_id'];
+		$subscription->id_category = $_POST['category_id'];
+		if(!$subscription->exists()){
+			$result = $subscription->add();
+			if($result){
+				print '<div id="message" class="updated below-h2"><p>Subscription added successfully.</p></div>';
+			}else{
+				print '<div id="message" class="updated below-h2"><p>Sorry, but you already subscribed to that source.</p></div>';
+			}
+		}else{
+			$result = $subscription->edit_category();
+			if($result){
+				print '<div id="message" class="updated below-h2"><p>Successfully changed the Category of your Subscription.</p></div>';
+			}else{
+				print '<div id="message" class="updated below-h2"><p>Sorry, but you already subscribed to that source with that Category.</p></div>';
+			}
+		}
+		
+		
+	}
+	
+	
+	// Then Render the Form (again)
+	if(isset($_GET['source_id']) && !empty($_GET['source_id'])){
+		$source_id = $_GET['source_id'];
+		$source = new chiron_source($source_id);
+		print "<p>Adding Subscrption of the Source <strong>'".$source->title."'</strong></p>";
+		$categories = $chiron->categories_get_all_by_user($uid);
+		print "<div class='form-wrap'>";
+		print '<form method="post">';
+		if(count($categories)>0){
+			print "<select name='category_id'>";
+			print "<option value='0'>Uncategorized</option>";
+			foreach($categories as $category){
+				if($subscription->id_category == $category->id){
+					$selected = " selected='selected'";
+				}else{
+					$selected = '';
+				}
+				print "<option value='".$category->id."' ".$selected.">".$category->title."</option>";
+			}
+			print "</select>";
+		}
+		print '<input type="submit">';
+		print '</form>';
+		print "</div> <!-- // .form-wrap -->";		
+	}
+	print "</div> <!-- // .wrap -->";
+}
+
 
 
 // Everything WP-Cron-Job from here

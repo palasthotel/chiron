@@ -4,6 +4,8 @@ class chiron_core {
 	public $chiron_core_db;
   	public $sources;
   	public $items;
+	public $my_categories;
+	public $my_subscriptions;
 	
 	
 	public function __construct() {    
@@ -29,6 +31,11 @@ class chiron_core {
     	$this->sources = $this->chiron_core_db->sources_get_all();
     	return count($this->sources);
   	}
+
+	public function sources_get_some_by_ids($ids_sources){
+		$this->sources = $this->chiron_core_db->sources_get_some_by_ids($ids_sources);
+		return count($this->sources);
+	}
 
 	// Methods for multiple Items
 	
@@ -81,6 +88,21 @@ class chiron_core {
 	
 	public function categories_get_all_by_user($uid){
 		return $this->chiron_core_db->categories_get_all_by_user($uid);
+	}
+	
+	
+	// Methods for Subscriptions
+	
+	public function subscriptions_get_all_by_user($id_user){
+		$this->categories = $this->categories_get_all_by_user($id_user);
+		$this->subscriptions = $this->chiron_core_db->subscriptions_get_all_by_user($id_user);
+		$ids_sources = array();
+		foreach($this->subscriptions as $subscription){
+			$ids_sources[] = $subscription->id_source;
+		}
+		$this->sources_get_some_by_ids($ids_sources);
+		return count($this->subscriptions);	
+		
 	}
 
   

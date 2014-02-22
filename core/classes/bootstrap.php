@@ -12,6 +12,8 @@ include 'category.class.php';
 include 'category.db-class.php';
 include 'item.class.php';
 include 'item.db-class.php';
+include 'subscription.class.php';
+include 'subscription.db-class.php';
 include 'user.php';
 include 'public.php';
 include 'private.php';
