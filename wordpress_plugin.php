@@ -117,6 +117,9 @@ function chiron_wp_settings(){
 
 function chiron_wp_dashboard(){
 	global $chiron;
+	$user = wp_get_current_user(); 
+	$id_user = $user->data->ID;
+	
 	print "<div class='wrap'>";
 	print "<h2>Welcome to your News-Dashboard, young Hero or Heroine!</h2>";
 	$sources_count = $chiron->sources_count();
@@ -149,8 +152,7 @@ function chiron_wp_dashboard(){
 	print ("</div>");
 	
 	$day = date("Y-m-d", $timestamp);
-	$chiron->sources_get_all();
-	$chiron->items_get_by_day($day);
+	$chiron->items_get_by_day_and_user($day, $id_user);
 	if(count($chiron->items)>0){
 		print "<table class='wp-list-table widefat'>";
 		print '<thead>';
@@ -159,26 +161,50 @@ function chiron_wp_dashboard(){
 		print '<th>Title</th>';
 		print '</tr>';
 		print '</thead>';
-		$oddoreven = "odd";
-		foreach($chiron->items as $item){
-
-			$rowclasses = array();
-			if($oddoreven == "odd"){
-				$rowclasses[] = "alternate";
+		
+		$output = "";
+		foreach($chiron->categories as $category){
+			$output  = "";
+			
+			
+			
+			$found = 0;
+			foreach($chiron->subscriptions as $subscription){
+				if($category->id == $subscription->id_category){
+					$oddoreven = "odd";
+					foreach($chiron->items as $item){						
+						if($item->source == $subscription->id_source){
+							$found ++;
+							$rowclasses = array();
+							if($oddoreven == "odd"){
+								$rowclasses[] = "alternate";
+							}
+							$classes = implode(" ", $rowclasses);
+							
+							$output .= "<tr class='".$classes."'>";
+							$output .= "<td>".$chiron->sources[$item->source]->title."</td>";
+							$output .= "<td><a href='".$item->url."'>".$item->title."</a></td>";
+							$output .= "</tr>";
+							
+							if($oddoreven == "odd"){
+								$oddoreven = "even";
+							}else{
+								$oddoreven = "odd";
+							}
+							
+						}						
+					}
+				}
 			}
-			$classes = implode(" ", $rowclasses);
-			print "<tr class='".$classes."'>";
-			print "<td>".$chiron->sources[$item->source]->title."</td>";
-			print "<td><a href='".$item->url."'>".$item->title."</a></td>";
-			print "</tr>";
-			if($oddoreven == "odd"){
-				$oddoreven = "even";
-			}else{
-				$oddoreven = "odd";
-			}
-		}
-		//print_r($chiron->sources);
-		//			print_r($item);
+			if($found>0){
+				$header  = "";
+				$header .= "<tr>";
+				$header .= "<td colspan='2'><h3>".$category->title." with ".$found." items.</h3></td>";
+				$header .= "</tr>";
+				print $header.$output;
+			}			
+		}	
+	
 		print '<tfoot>';
 		print '<tr>';
 		print '<th>Source</th>';

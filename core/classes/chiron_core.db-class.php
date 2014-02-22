@@ -99,7 +99,7 @@ class chiron_core_db {
 			
 			$wherese = array();
 			foreach($ids_sources as $id_source){
-				$wherese[] = "id = '".$id_source."'";
+				$wherese[] = "id_source = '".$id_source."'";
 			}
 			$where = implode(" OR ", $wherese);
 			

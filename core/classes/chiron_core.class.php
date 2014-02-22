@@ -46,12 +46,14 @@ class chiron_core {
   	}
 
 	public function items_get_by_day_and_user($day, $id_user){
+		$this->categories = $this->categories_get_all_by_user($id_user);
    		$this->subscriptions = $this->chiron_core_db->subscriptions_get_all_by_user($id_user);
 		$ids_sources = array();
 		foreach($this->subscriptions as $subscription){
 			$ids_sources[] = $subscription->id_source;
 		}
-		$this->items = $this->chiron_core_db->items_get_by_day_and_source($day, $ids_sources);
+		$this->sources_get_some_by_ids($ids_sources);
+		$this->items = $this->chiron_core_db->items_get_by_day_and_sources($day, $ids_sources);
     	return count($this->items);
   	}
   
