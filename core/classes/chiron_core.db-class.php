@@ -65,6 +65,17 @@ class chiron_core_db {
 			
 		}
 		
+		public function sources_get_item_count(){
+			global $chiron_db;
+			$query = "SELECT  id_source, count(id_source) FROM ".$chiron_db->prefix."chiron_item GROUP by id_source";
+			$query_result = $chiron_db->query($query) or print('Query failed: '.mysql_error()." QUERY [".$query."]");
+			$return = array();
+			while($itemcount = $chiron_db->fetch_array($result)) {
+				$return[$itemcount['id_source']] = $itemcount['count(id_source)'];
+			}
+			return $return;
+		}
+		
 		
 		// Methods for Items
 		

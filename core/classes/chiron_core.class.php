@@ -36,6 +36,10 @@ class chiron_core {
 		$this->sources = $this->chiron_core_db->sources_get_some_by_ids($ids_sources);
 		return count($this->sources);
 	}
+	
+	public function sources_get_item_count(){
+		return $this->chiron_core_db->sources_get_item_count();
+	}
 
 	// Methods for multiple Items
 	

@@ -1,7 +1,9 @@
 <?php
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
-include 'config.php';
+if(CHIRON_IMPLEMENTATION == "Standalone"){
+	include 'config.php';
+}
 include 'simplepie.inc';
 include 'chiron_db.php';
 include 'chiron_core.class.php';

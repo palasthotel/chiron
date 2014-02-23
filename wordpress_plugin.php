@@ -15,6 +15,7 @@ define(CHIRON_DB_USR,DB_USER);
 define(CHIRON_DB_PWD,DB_PASSWORD);
 define(CHIRON_DB_DBS,DB_NAME);
 define(CHIRON_DB_PRE, $table_prefix);
+define(CHIRON_IMPLEMENTATION, "Wordpress");
 
 // Then bootstrap Chiron.
 // This loads all Classes and creates Instances of the classes chiron_db and chiron_core.
@@ -499,9 +500,12 @@ function chiron_wp_manage_subscriptions(){
 	global $chiron;
 	$user = wp_get_current_user(); 
 	$uid = $user->data->ID;
+	$result = $chiron->subscriptions_get_all_by_user($uid);
+	$itemcount = $chiron->sources_get_item_count();
+		
 	print "<div class='wrap'>";
 	print "<h2>Manage your Subscriptions</h2>";	
-	$result = $chiron->subscriptions_get_all_by_user($uid);
+		
 	$no = count($chiron->sources);
 	print "<p>You have subscribed ".$no." magnificent Sources of Information.</p>";
 	if($no>0){
@@ -511,6 +515,7 @@ function chiron_wp_manage_subscriptions(){
 		print '<th>Source</th>';
 		print '<th>Category</th>';
 		print '<th>URL</th>';
+		print '<th>Items</th>';
 		print '<th>Last Checked</th>';
 		print '<th>Status</th>';
 		print "<th>Operations</th>";
@@ -527,6 +532,7 @@ function chiron_wp_manage_subscriptions(){
 			print "<td><strong>".$source->title."</strong></td>";
 			print "<td>".$chiron->categories[$chiron->subscriptions[$source->id]->id_category]->title."</td>";
 			print "<td>".$source->url."</td>";
+			print "<td>".$itemcount[$source->id]."</td>";
 			if($source->lastchecked>0){
 				$date = date("d. m. Y H:i:s", $source->lastchecked);
 			}else{
@@ -552,6 +558,7 @@ function chiron_wp_manage_subscriptions(){
 		print '<th>Source</th>';
 		print '<th>Category</th>';
 		print '<th>URL</th>';
+		print '<th>Items</th>';
 		print '<th>Last Checked</th>';
 		print '<th>Status</th>';
 		print "<th>Operations</th>";
