@@ -34,24 +34,28 @@ function db_query($querystring){
     return $result;
 }
 
+
+
 function chiron_wp_activate(){
+	global $wp_version;
 	
 	static $secondCall=FALSE;
 	$chiron_db = new chiron_db(CHIRON_DB_SRV, CHIRON_DB_USR, CHIRON_DB_PWD, CHIRON_DB_DBS, CHIRON_DB_PRE);
-	
+
 	$options=get_option("chiron",array());
 	if(!isset($options['installed'])){
 		// Run the Installation
 		// 1. Create the Databases based on the Schema
 		$chiron_db->execute_schema();
-			
+
 		// Tell Wordpress that we have installed
-		$options['installed']=TRUE;
-		update_option("chiron",$options);
-		
+		$options['installed'] = TRUE;
+		update_option("chiron", $options);
+
 	}else{		
 		//TODO: implement update support
-	}	
+	}
+		
 }
 
 register_activation_hook(__FILE__, "chiron_wp_activate");
@@ -80,8 +84,19 @@ function chiron_wp_admin_menu()
 add_action("admin_menu","chiron_wp_admin_menu");
 
 function chiron_wp_debug(){
+	global $wp_version;
 	print "<div class='wrap'>";
 	print "<h2>Debugging Chiron</h2>";
+	
+	// Basic Data
+	
+	print "<h3>Basic Data</h3>";
+	print "<ul>";
+	print "<li><strong>Wordpress Version:</strong> ".$wp_version."</li>";
+	print "</ul>";
+	
+	
+	// Schedules
 	print "<h3>Current Schedules</h3>";
 	print "<ul>";
 	$schedules = wp_get_schedules(); 
@@ -89,6 +104,8 @@ function chiron_wp_debug(){
 		print "<li><strong>".$plan['display']."</strong> runs every ".$plan['interval']." seconds. [".$slug."]</li>";
 	}
 	print "</ul>";
+	
+	// Crons
 	print "<h3>Cron</h3>";
 	$cron = get_option('cron');
 	print "<ul>";
@@ -118,6 +135,7 @@ function chiron_wp_settings(){
 
 function chiron_wp_dashboard(){
 	global $chiron;
+	global $wp_version;
 	$user = wp_get_current_user(); 
 	$id_user = $user->data->ID;
 	
@@ -125,6 +143,12 @@ function chiron_wp_dashboard(){
 	print "<h2>Welcome to your News-Dashboard, young Hero or Heroine!</h2>";
 	$sources_count = $chiron->sources_count();
 	$items_count = $chiron->items_count();
+	
+	$version = explode(".", $wp_version);
+	if(!($version[0] >= "3" and $version[1]>=8)){
+		print "<p>WARNING: Chiron hasn't been tested with Wordpress ".$wp_version.". Please deactivate the Plugin or use it on your own risk!</p>";
+	}
+	
 	print "<p><strong>".$items_count[0]." items</strong> from <strong>".$sources_count[0]." sources</strong> are waiting to be read by you.</p>";
 	
 	if($_GET["day"]!=""){
