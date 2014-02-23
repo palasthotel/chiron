@@ -47,6 +47,19 @@ class chiron_subscription_db{
 		}
 	}
 	
+	public function get_by_source_and_user($id_source, $id_user){
+		global $chiron_db;
+		$query = "SELECT * FROM `".$chiron_db->prefix."chiron_subscription` WHERE id_source='".$id_source."' and id_user='".$id_user."'";
+		$chiron_db->query($query);
+		$result = $chiron_db->fetch_array();
+		//print_r($result);
+		if($result['id']>0){
+			return $result;
+		}else{
+			return 0;
+		}
+	}
+	
 }
 
 

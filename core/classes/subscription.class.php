@@ -42,6 +42,11 @@ class chiron_subscription {
 		$this->id_category = $array['id_category'];
 	}
 	
+	public function load_by_source_and_user(){
+		$array = $this->chiron_subscription_db->get_by_source_and_user($this->id_source, $this->id_user);
+		$this->load($array);
+	}
+	
 	public function load_id(){
 		$result = $this->chiron_subscription_db->get_id_by_source_and_user($this->id_source, $this->id_user);
 		if($result!=0){

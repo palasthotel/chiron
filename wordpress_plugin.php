@@ -165,13 +165,11 @@ function chiron_wp_dashboard(){
 		$output = "";
 		foreach($chiron->categories as $category){
 			$output  = "";
-			
-			
-			
+					
 			$found = 0;
+			$oddoreven = "odd";
 			foreach($chiron->subscriptions as $subscription){
-				if($category->id == $subscription->id_category){
-					$oddoreven = "odd";
+				if($category->id == $subscription->id_category){					
 					foreach($chiron->items as $item){						
 						if($item->source == $subscription->id_source){
 							$found ++;
@@ -199,7 +197,7 @@ function chiron_wp_dashboard(){
 			if($found>0){
 				$header  = "";
 				$header .= "<tr>";
-				$header .= "<td colspan='2'><h3>".$category->title." with ".$found." items.</h3></td>";
+				$header .= "<td colspan='2'><h3 style='display:inline'>".$category->title."</h3> with ".$found." items</td>";
 				$header .= "</tr>";
 				print $header.$output;
 			}			
@@ -610,6 +608,13 @@ function chiron_wp_manage_subscription(){
 	if(isset($_GET['source_id']) && !empty($_GET['source_id'])){
 		$source_id = $_GET['source_id'];
 		$source = new chiron_source($source_id);
+		$subscription = new chiron_subscription();
+		$subscription->id_source = $source_id;
+		$subscription->id_user = $uid;
+		if($subscription->exists()){
+			$subscription->load_by_source_and_user();
+		}
+		
 		print "<p>Adding Subscrption of the Source <strong>'".$source->title."'</strong></p>";
 		$categories = $chiron->categories_get_all_by_user($uid);
 		print "<div class='form-wrap'>";
