@@ -687,7 +687,7 @@ add_filter( 'cron_schedules', 'chiron_wp_add_cron_intervals' );
 add_action( 'chiron_cron_hook', 'chiron_wp_cron_exec' );
 
 if( !wp_next_scheduled( 'chiron_cron_hook' ) ) {
-	wp_schedule_event( time(), '1minute', 'chiron_cron_hook' );
+	wp_schedule_event( time(), '5minutes', 'chiron_cron_hook' );
 }
 
 
