@@ -10,10 +10,10 @@
 // First, like in all Implementations, get the Database Credentials
 global $table_prefix;
 
-define(CHIRON_DB_SRV,DB_HOST);
-define(CHIRON_DB_USR,DB_USER);
-define(CHIRON_DB_PWD,DB_PASSWORD);
-define(CHIRON_DB_DBS,DB_NAME);
+define(CHIRON_DB_SRV, DB_HOST);
+define(CHIRON_DB_USR, DB_USER);
+define(CHIRON_DB_PWD, DB_PASSWORD);
+define(CHIRON_DB_DBS, DB_NAME);
 define(CHIRON_DB_PRE, $table_prefix);
 define(CHIRON_IMPLEMENTATION, "Wordpress");
 
@@ -149,7 +149,7 @@ function chiron_wp_dashboard(){
 		print "<p>WARNING: Chiron hasn't been tested with Wordpress ".$wp_version.". Please deactivate the Plugin or use it on your own risk!</p>";
 	}
 	
-	print "<p><strong>".$items_count[0]." items</strong> from <strong>".$sources_count[0]." sources</strong> are waiting to be read by you.</p>";
+	
 	
 	if($_GET["day"]!=""){
 	    if($_GET["day"]== date("Y-m-d",time())){
@@ -161,24 +161,37 @@ function chiron_wp_dashboard(){
 	    $date = date("Y-m-d", time()-60*60*24);
 	  }
 	  $timestamp = strtotime($date);
-	
-	print('<div class="tablenav">');    
-	print('<div class="tablenav-pages">');    
-	$yesterday = date("Y-m-d", $timestamp - 60*60*24);
-	$tomorrow = date("Y-m-d", $timestamp + (60*60*24));
-	print '<div class="tablenav-pages">';
-	print " <a class='prev-page' href='?page=chiron_dashboard&day=".$yesterday."'>‹</a> ";
-	print '<span class="paging-input">'."News of ".	date("l", $timestamp)." the ".date("j. F Y", $timestamp)."</span>";
-	if($tomorrow != date("Y-m-d", time())){
-	    print " <a class='next-page' href='?page=chiron_dashboard&day=".$tomorrow."'>›</a>";
-	}
-	print ("</div>");
-	print ("</div>");
-	print ("</div>");
+		
+
 	
 	$day = date("Y-m-d", $timestamp);
 	$chiron->items_get_by_day_and_user($day, $id_user);
+	
+	print "<p><strong>".$items_count[0]." items</strong> from <strong>".$sources_count[0]." sources</strong> and <strong>".count($chiron->items)." news of ".date("l", $timestamp)." the ".date("j. F Y", $timestamp)."</strong> are waiting to be read by you.</p>";
+	
+	$pagenav = "";
+	$pagenav .= '<div class="tablenav">';    
+	$pagenav .= '<div class="tablenav-pages">';    
+	$yesterday = date("Y-m-d", $timestamp - 60*60*24);
+	$tomorrow = date("Y-m-d", $timestamp + (60*60*24));
+	$pagenav .= '<div class="tablenav-pages">';
+	$pagenav .= " <a class='prev-page' href='?page=chiron_dashboard&day=".$yesterday."'>‹</a> ";
+	$pagenav .= '<span class="paging-input" style="width:20em;">'."News of ".date("d. M. Y", $timestamp)."</span>";
+	if($tomorrow != date("Y-m-d", time())){
+	    $pagenav .= " <a class='next-page' href='?page=chiron_dashboard&day=".$tomorrow."'>›</a>";
+	}else{
+		$pagenav .= " <a class='next-page'>›</a>";
+	}
+	$pagenav .= "</div>";
+	$pagenav .= "</div>";
+	$pagenav .= "</div>";
+
+	print $pagenav;
+	
 	if(count($chiron->items)>0){
+		
+		
+		
 		print "<table class='wp-list-table widefat'>";
 		print '<thead>';
 		print '<tr>';
@@ -206,7 +219,13 @@ function chiron_wp_dashboard(){
 							
 							$output .= "<tr class='".$classes."'>";
 							$output .= "<td>".$chiron->sources[$item->source]->title."</td>";
-							$output .= "<td><a href='".$item->url."'>".$item->title."</a></td>";
+							$title = "";
+							if($item->title !=""){
+								$title = $item->title;
+							}else{
+								$title = "~";
+							}
+							$output .= "<td><a href='".$item->url."'>".$title."</a></td>";
 							$output .= "</tr>";
 							
 							if($oddoreven == "odd"){
@@ -235,8 +254,11 @@ function chiron_wp_dashboard(){
 		print '</tr>';
 		print '</tfoot>';
 		print "</table>";
+		
+		print $pagenav;
+		
 	}
-	print "<p>".count($chiron->items)." yeasterdays news.</p>";
+	print "<p>".count($chiron->items)." yesterdays news.</p>";
 	print "</div>";
 }
 

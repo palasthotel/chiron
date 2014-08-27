@@ -19,7 +19,7 @@ class chiron_source_db{
 	public function source_add($title, $type, $url){
 		global $chiron_db;
 		$query = "INSERT INTO `".$chiron_db->prefix."chiron_source` (`id`, `title`, `id_source_type`,  `url` ) VALUES ( NULL , '".$title."', '".$type."', '".$url."');";
-	    $result = $chiron_db->query($query);
+	    $result = $chiron_db->query($query) or print("Query failed: ".mysql_error()." Query:".$query);;
 		return $result;
 	}
 	

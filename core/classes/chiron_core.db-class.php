@@ -48,12 +48,15 @@ class chiron_core_db {
 		
 		public function sources_get_some_by_ids($ids_sources){
 			global $chiron_db;
-			$wherese = array();
-			foreach($ids_sources as $id_source){
-				$wherese[] = "id = '".$id_source."'";
+			$where = "";
+			if(is_array($ids_sources) and count($ids_sources)>0){
+				$wherese = array();
+				foreach($ids_sources as $id_source){
+					$wherese[] = "id = '".$id_source."'";
+				}
+				$where = "WHERE ".implode(" OR ", $wherese);
 			}
-			$where = implode(" OR ", $wherese);
-			$query = "SELECT * FROM ".$chiron_db->prefix."chiron_source WHERE ".$where." ORDER BY title";
+			$query = "SELECT * FROM ".$chiron_db->prefix."chiron_source ".$where." ORDER BY title";
 		    $query_result = $chiron_db->query($query) or print('Query failed: '.mysql_error()." QUERY [".$query."]");
 			$return = array();
 		    while($source_array = $chiron_db->fetch_array($result)) {
@@ -108,13 +111,16 @@ class chiron_core_db {
 			$start = strtotime($day." 00:00:00");
 			$end = strtotime($day." 23:59:59");
 			
-			$wherese = array();
-			foreach($ids_sources as $id_source){
-				$wherese[] = "id_source = '".$id_source."'";
+			$where = "";
+			if(is_array($ids_sources) and count($ids_sources)>0){
+				$wherese = array();
+				foreach($ids_sources as $id_source){
+					$wherese[] = "id_source = '".$id_source."'";
+				}
+				$where = " AND (".implode(" OR ", $wherese).")";
 			}
-			$where = implode(" OR ", $wherese);
 			
-			$query = "SELECT * FROM ".$chiron_db->prefix."chiron_item WHERE timestamp >= '$start' AND timestamp <= '$end' AND (".$where.")";
+			$query = "SELECT * FROM ".$chiron_db->prefix."chiron_item WHERE timestamp >= '$start' AND timestamp <= '$end' ".$where;
 		    $result = $chiron_db->query($query) or print('Query failed: ' . mysql_error());  
 		 	$return = array();
 		    while($item = $chiron_db->fetch_array($result)){

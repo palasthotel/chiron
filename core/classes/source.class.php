@@ -71,7 +71,7 @@ class chiron_source {
        foreach($items as $item){	
           $converted = new chiron_item();
           $converted->fill($item);
-          $converted->source=$this->id;
+          $converted->source = $this->id;
 		  $result = $converted->add();      
 		  // If an item is not added, we assume that all following are also already in the DB, so we break
 		  if($result == 1){
