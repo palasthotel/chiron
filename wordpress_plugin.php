@@ -79,6 +79,8 @@ function chiron_wp_admin_menu()
 		add_submenu_page('null', 'Refresh Source', 'Refresh Source', 'read', 'chiron_refresh_source', 'chiron_wp_refresh_source' );
 		add_submenu_page('null', 'Edit Category', 'Edit Category', 'read', 'chiron_edit_category', 'chiron_wp_edit_category' );
 		add_submenu_page('null', 'Manage Subscription', 'Manage Subscription', 'read', 'chiron_manage_subscription', 'chiron_wp_manage_subscription' );
+		add_submenu_page('null', 'Delete Subscription', 'Delete Subscription', 'read', 'chiron_delete_subscription', 'chiron_wp_delete_subscription' );
+
 }		
 
 add_action("admin_menu","chiron_wp_admin_menu");
@@ -699,6 +701,34 @@ function chiron_wp_manage_subscription(){
 	print "</div> <!-- // .wrap -->";
 }
 
+
+
+function chiron_wp_delete_subscription(){
+	global $chiron;
+	$user = wp_get_current_user(); 
+	$uid = $user->data->ID;
+	print "<div class='wrap'>";
+	print "<h2>Unscribe from a Source</h2>";
+	if(isset($_GET['source_id']) && !empty($_GET['source_id'])){
+		$source_id = $_GET['source_id'];
+		$source = new chiron_source($source_id);
+	}
+	$subscription = new chiron_subscription();
+	$subscription->id_source = $source_id;
+	$subscription->id_user = $uid;
+	//print_r($subscription);
+	if($subscription->exists()){
+		$subscription->load_by_source_and_user();
+		//print_r($subscription);
+		$subscription->delete();
+		print '<div id="message" class="updated below-h2"><p>Successfully unscribed you from Source "'.$source->title.'".</p></div>';
+	}else{
+		print '<div id="message" class="updated below-h2"><p>Sorry, but you\'re not subscribed to Source "'.$source->title.'".</p></div>';
+	}
+	print "<p>Go back to <a href='?page=chiron_manage_subscriptions'>your Subscriptions</a> or <a href='?page=chiron_dashboard'>your Newsdashboard</a>.</p>";
+	
+	print "</div> <!-- // .wrap -->";
+}
 
 
 // Everything WP-Cron-Job from here

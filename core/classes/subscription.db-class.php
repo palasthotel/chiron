@@ -32,6 +32,9 @@ class chiron_subscription_db{
 	
 	public function delete($id){
 		global $chiron_db;
+		$query = "DELETE FROM ".$chiron_db->prefix."chiron_subscription WHERE id=".$id." ";
+		$chiron_db->query($query);
+		return 1;
 	}
 	
 	public function get_id_by_source_and_user($id_source, $id_user){

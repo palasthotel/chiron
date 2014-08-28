@@ -31,8 +31,15 @@ class chiron_subscription {
 		return $this->chiron_subscription_db->edit_category($this->id, $this->id_category);
 	}
 	
-	public function delete($id){
-		
+	public function delete(){
+		// First, try to load the ID if it isnt.
+		if($this->id=="" or !$this->id>0){
+			$this->load_id();
+		}
+		// Second, if we then do have an id, delete it
+		if($this->id!="" and $this->id>0){
+			$this->chiron_subscription_db->delete($this->id);
+		}
 	}
 	
 	public function load($array){
