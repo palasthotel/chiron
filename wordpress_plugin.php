@@ -192,7 +192,7 @@ function chiron_wp_dashboard(){
 		
 		
 		
-		print "<table class='wp-list-table widefat'>";
+		print "<table class='wp-list-table widefat chiron-news'>";
 		print '<thead>';
 		print '<tr>';
 		print '<th>Source</th>';
@@ -225,7 +225,7 @@ function chiron_wp_dashboard(){
 							}else{
 								$title = "~";
 							}
-							$output .= "<td><a href='".$item->url."'>".$title."</a></td>";
+							$output .= "<td><a href='".$item->url."'><span class='dashicons dashicons-yes'></span>".$title."</a></td>";
 							$output .= "</tr>";
 							
 							if($oddoreven == "odd"){
@@ -254,6 +254,13 @@ function chiron_wp_dashboard(){
 		print '</tr>';
 		print '</tfoot>';
 		print "</table>";
+		print '<style>'."\n";
+		print ' a span {color:white;}'."\n";
+		print ' .alternate a span {color:#f9f9f9;}'."\n";	
+		print ' a:visited, a:visited span { color:black; }'."\n";
+		print ' a:visited:hover { color:dimgray; }'."\n";
+		
+		print '</style>';
 		
 		print $pagenav;
 		
