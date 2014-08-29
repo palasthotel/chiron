@@ -80,6 +80,7 @@ function chiron_wp_admin_menu()
 		add_submenu_page('null', 'Edit Category', 'Edit Category', 'read', 'chiron_edit_category', 'chiron_wp_edit_category' );
 		add_submenu_page('null', 'Manage Subscription', 'Manage Subscription', 'read', 'chiron_manage_subscription', 'chiron_wp_manage_subscription' );
 		add_submenu_page('null', 'Delete Subscription', 'Delete Subscription', 'read', 'chiron_delete_subscription', 'chiron_wp_delete_subscription' );
+		add_submenu_page('null', 'Add new Source and Subscription', 'Add new Source and Subscription', 'read', 'chiron_add_source_and_subscription', 'chiron_wp_add_source_and_subscription' );
 
 }		
 
@@ -136,33 +137,43 @@ function chiron_wp_settings(){
 
 
 function chiron_wp_dashboard(){
+	// Get Basic Information
 	global $chiron;
 	global $wp_version;
 	$user = wp_get_current_user(); 
 	$id_user = $user->data->ID;
-	
-	print "<div class='wrap'>";
-	print "<h2>Welcome to your News-Dashboard, young Hero or Heroine!</h2>";
 	$sources_count = $chiron->sources_count();
 	$items_count = $chiron->items_count();
 	
+	// Wrapper Div and Header
+	print "<div class='wrap'>";
+	print "<h2>Welcome to your News-Dashboard, young Hero or Heroine!</h2>";
+	
+	
+	// Check Version
 	$version = explode(".", $wp_version);
 	if(!($version[0] >= "3" and $version[1]>=8)){
 		print "<p>WARNING: Chiron hasn't been tested with Wordpress ".$wp_version.". Please deactivate the Plugin or use it on your own risk!</p>";
 	}
 	
+	// Quick add Feed
 	
+	print "<form class='chiron-quickadd' style='text-align:left;' action='?page=chiron_add_source_and_subscription' method='post'>";
+	print "<input type='text' name='url' placeholder='Add a URL of a Feed here' style='width:38%; height:28px;'/>";
+	print "<input type='submit' class='button' value='Quick add new Feed' style='width:18%;'>";
+	print "</form>";
 	
+	// Check and get the current or selected Date
 	if($_GET["day"]!=""){
 	    if($_GET["day"]== date("Y-m-d",time())){
 	      $date = date("Y-m-d", time()-60*60*24);
 	    }else{
 	      $date = $_GET["day"];
 	    }
-	  }else{
+	 }else{
 	    $date = date("Y-m-d", time()-60*60*24);
-	  }
-	  $timestamp = strtotime($date);
+	 }
+	 $timestamp = strtotime($date);
 		
 
 	
@@ -259,8 +270,8 @@ function chiron_wp_dashboard(){
 		print '<style>'."\n";
 		print ' a span {color:white;}'."\n";
 		print ' .alternate a span {color:#f9f9f9;}'."\n";	
-		print ' a:visited, a:visited span { color:black; }'."\n";
-		print ' a:visited:hover { color:dimgray; }'."\n";
+		print ' a:visited, a:visited span { color:dimgray; }'."\n";
+		print ' a:visited:hover { color:black; }'."\n";
 		
 		print '</style>';
 		
@@ -278,7 +289,8 @@ function chiron_wp_manage_sources(){
 	global $chiron;
 	print "<div class='wrap'>";
 	print "<h2>Sources <a class='add-new-h2' href='?page=chiron_add_source'>Add New</a></h2>";
-	print "<p>Manage your Sources, young Hero or Heroine!</p>";
+	print "<p>Manage your Sources, young Hero or Heroine! Rember, these are all sources, that are used by all users of this Site. So be carefull, when editing
+	or deleting a Source! Another user might think differently about it.</p>";
 	$no = $chiron->sources_get_all();
 	print "<p>You have ".$no." magnificent Sources of Information.</p>";
 	if($no>0){
@@ -730,6 +742,109 @@ function chiron_wp_delete_subscription(){
 	print "</div> <!-- // .wrap -->";
 }
 
+
+
+
+
+function chiron_wp_add_source_and_subscription(){
+	global $chiron;
+	$user = wp_get_current_user(); 
+	$uid = $user->data->ID;
+	$categories = $chiron->categories_get_all_by_user($uid);
+	
+	
+	print "<div class='wrap'>";
+	print "<h2>Add New Feed Source</h2>";
+	// Set the URL
+	$url = "";
+	if(isset($_POST['url']) and !empty($_POST['url'])){
+		$url = $_POST['url'];		
+	}
+	
+	$title = "";
+	if(isset($_POST['title']) and !empty($_POST['title'])){
+		$title = $_POST['title'];		
+	}
+	
+	// Try to get the Title from SimplePie
+	if($url !="" and $title == ""){
+		$feed = new SimplePie();
+	    $feed->set_feed_url($url);
+	    $feed->init();
+	    $feed->handle_content_type();
+		$title = $feed->get_title();
+	}
+	
+	$category = "0";
+	if(isset($_POST['category_id']) and !empty($_POST['category_id'])){
+		$category = $_POST['category_id'];
+	}
+	
+	// Actually save the Data
+	if($url != "" and $category !="0"){
+		// First Check wether the Source exists
+		$source = new chiron_source();
+		$source->url = $url;
+		// If the Source doesn't exist, create it.
+		if(!$source->exists()){
+			$source->type = '1';
+			$source->title = $title;
+			$source->add();
+			print '<div id="message" class="updated below-h2"><p>Source added successfully.</p></div>';
+		}else{
+			$source->load_by_url();
+			print '<div id="message" class="updated below-h2"><p>Source already exists. I will try to subscribe you to it.</p></div>';
+		}
+
+		// Second, add the Subscription
+		$subscription = new chiron_subscription();
+		$subscription->id_user = $uid;
+		$subscription->id_source = $source->id;
+		$subscription->id_category = $category;
+		if(!$subscription->exists()){
+			$result = $subscription->add();
+			if($result){
+				print '<div id="message" class="updated below-h2"><p>Subscription added successfully.</p></div>';
+			}else{
+				print '<div id="message" class="updated below-h2"><p>Sorry, but you already subscribed to that source.</p></div>';
+			}
+		}else{
+			print '<div id="message" class="updated below-h2"><p>Your are already subscribed to that Source.</p></div>';
+			$result = $subscription->edit_category();
+			if($result){
+				print '<div id="message" class="updated below-h2"><p>Successfully changed the Category of your Subscription.</p></div>';
+			}else{
+				print '<div id="message" class="updated below-h2"><p>Sorry, but you already subscribed to that source with that Category.</p></div>';
+			}
+		}
+		
+	}
+	
+	
+	print "<div class='form-wrap'>";
+	print '<form method="post">';
+	print '<div class="form-field form-required"><label>URL of your new Source</label><input type="text" name="url" value="'.$url.'"/><p>The URL under which your Source is awailable.</p></div>';
+	print '<div class="form-field form-required"><label>Title of your new Source</label><input type="text" name="title" value="'.$title.'"><p>If this field is blank, you may add a Title here. Otherwise you may edit it now. Or you may edit it later on.</p></div>';
+	print '<div class="form-field form-required"><label>Category of your new Source</label>';
+	if(count($categories)>0){
+		print "<select name='category_id'>";
+		print "<option value='0'>Uncategorized</option>";
+		foreach($categories as $category){
+			if($subscription->id_category == $category->id){
+				$selected = " selected='selected'";
+			}else{
+				$selected = '';
+			}
+			print "<option value='".$category->id."' ".$selected.">".$category->title."</option>";
+		}
+		print "</select>";
+	}
+	print "</div>";
+	print '<input type="submit">';
+	print '</form>';
+	
+	print "</div> <!-- // .wrap -->";
+}
 
 // Everything WP-Cron-Job from here
  

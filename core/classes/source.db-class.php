@@ -40,6 +40,14 @@ class chiron_source_db{
 		$query = "UPDATE ".$chiron_db->prefix."chiron_source set status = '".$status."' WHERE id = ".$id."";
 		return $chiron_db->query($query) or print("Query failed: ".mysql_error()." Query:".$query);
 	}
+	
+	public function get_id_by_url($url){
+		global $chiron_db;
+		$query = "SELECT id FROM `".$chiron_db->prefix."chiron_source` WHERE url='".$url."'";
+	    $result = $chiron_db->query($query);
+		$row = $chiron_db->fetch_array();
+		return $row['id'];
+ 	}
 }
 
 

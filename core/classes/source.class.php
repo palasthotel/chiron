@@ -29,6 +29,13 @@ class chiron_source {
     $this->lastchecked = $array['lastchecked'];	
   }
 
+	public function load_by_url() {
+	    $this->chiron_source_db = new chiron_source_db();
+		$this->id = $this->chiron_source_db->get_id_by_url($this->url);
+		$array = $this->chiron_source_db->source_load($this->id);
+		$this->load($array);	
+	}
+
   public function exists(){            
       $return = $this->chiron_source_db->url_count($this->url);
       if($return[0]==0){
@@ -43,7 +50,8 @@ class chiron_source {
 		if($this->type == ""){
 			$this->type = "1";
 		}
-       $this->chiron_source_db->source_add($this->title, $this->type, $this->url);
+        $this->chiron_source_db->source_add($this->title, $this->type, $this->url);
+		$this->id = $this->chiron_source_db->get_id_by_url($this->url);
        return 1;   
      }else{
        return 0;
