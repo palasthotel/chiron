@@ -156,12 +156,7 @@ function chiron_wp_dashboard(){
 		print "<p>WARNING: Chiron hasn't been tested with Wordpress ".$wp_version.". Please deactivate the Plugin or use it on your own risk!</p>";
 	}
 	
-	// Quick add Feed
-	
-	print "<form class='chiron-quickadd' style='text-align:left;' action='?page=chiron_add_source_and_subscription' method='post'>";
-	print "<input type='text' name='url' placeholder='Add a URL of a Feed here' style='width:38%; height:28px;'/>";
-	print "<input type='submit' class='button' value='Quick add new Feed' style='width:18%;'>";
-	print "</form>";
+	chiron_wp_quick_add_form();
 	
 	// Check and get the current or selected Date
 	if($_GET["day"]!=""){
@@ -282,6 +277,13 @@ function chiron_wp_dashboard(){
 	print "</div>";
 }
 
+function chiron_wp_quick_add_form(){
+	// Quick add Feed
+	print "<form class='chiron-quickadd' style='text-align:left;' action='admin.php?page=chiron_add_source_and_subscription' method='post'>";
+	print "<input type='text' name='url' placeholder='Add a URL of a Feed here' style='width:50%; height:28px;'/>";
+	print "<input type='submit' class='button' value='Quick add new Feed' style=''>";
+	print "</form>";
+}
 
 // Sources from here on
 
@@ -868,6 +870,36 @@ if( !wp_next_scheduled( 'chiron_cron_hook' ) ) {
 function chiron_wp_cron_exec(){
 	global $chiron;
 	$sources = $chiron->sources_run_cron();
+}
+
+
+
+
+// Widgets
+
+add_action( 'wp_dashboard_setup', 'chiron_wp_add_widgets' );
+
+/**
+ * Add a widget to the dashboard.
+ *
+ * This function is hooked into the 'wp_dashboard_setup' action below.
+ */
+function chiron_wp_add_widgets() {
+
+	wp_add_dashboard_widget(
+                 'chiron_quick_add_form_widget',     // Widget slug.
+                 'Quick add Feed',         // Title.
+                 'chiron_wp_dashboard_widget_quick_add_feed_function' // Display function.
+                 
+    );	
+}
+
+
+/**
+ * Create the function to output the contents of our Dashboard Widget.
+ */
+function chiron_wp_dashboard_widget_quick_add_feed_function($drafts = false) {
+	chiron_wp_quick_add_form();	
 }
 
 
