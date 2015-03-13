@@ -60,6 +60,16 @@ function chiron_wp_activate(){
 
 register_activation_hook(__FILE__, "chiron_wp_activate");
 
+// THIS GIVES US SOME OPTIONS FOR STYLING THE ADMIN AREA
+function chiron_admin_head() {
+   print '<link rel="icon" type="image/x-icon" href="http://anmutunddemut.de/wp-content/plugins/chiron/wordpress/chiron-favicon-5.png"/>';
+}
+
+if($_GET['page']=='chiron_dashboard'){
+	add_action('admin_head', 'chiron_admin_head');
+}
+
+
 function chiron_wp_admin_menu()
 {        
 		// Main Backend Menu Item
@@ -87,6 +97,7 @@ function chiron_wp_admin_menu()
 add_action("admin_menu","chiron_wp_admin_menu");
 
 function chiron_wp_debug(){
+	add_action('admin_head', 'chiron_admin_head');
 	global $wp_version;
 	print "<div class='wrap'>";
 	print "<h2>Debugging Chiron</h2>";
@@ -129,6 +140,7 @@ function chiron_wp_debug(){
 }
 
 function chiron_wp_settings(){
+	add_action('admin_head', 'chiron_admin_head');
 	print "<div class='wrap'>";
 	print "<h2>Chiron Settings</h2>";
 	print "<p>Manage your Settings, young Hero or Heroine!</p>";
@@ -137,6 +149,7 @@ function chiron_wp_settings(){
 
 
 function chiron_wp_dashboard(){
+	
 	// Get Basic Information
 	global $chiron;
 	global $wp_version;
@@ -288,6 +301,7 @@ function chiron_wp_quick_add_form(){
 // Sources from here on
 
 function chiron_wp_manage_sources(){
+	add_action('admin_head', 'chiron_admin_head');
 	global $chiron;
 	print "<div class='wrap'>";
 	print "<h2>Sources <a class='add-new-h2' href='?page=chiron_add_source'>Add New</a></h2>";
@@ -880,17 +894,14 @@ function chiron_wp_cron_exec(){
 add_action( 'wp_dashboard_setup', 'chiron_wp_add_widgets' );
 
 /**
- * Add a widget to the dashboard.
- *
- * This function is hooked into the 'wp_dashboard_setup' action below.
+ * Add a widget to the dashboard. Implementation of action 'wp_dashboard_setup'.
  */
 function chiron_wp_add_widgets() {
 
 	wp_add_dashboard_widget(
-                 'chiron_quick_add_form_widget',     // Widget slug.
-                 'Quick add Feed',         // Title.
-                 'chiron_wp_dashboard_widget_quick_add_feed_function' // Display function.
-                 
+		'chiron_quick_add_form_widget',     // Widget slug.
+		'Quick add Feed',         			// Title.
+		'chiron_wp_dashboard_widget_quick_add_feed_function' // Display function.                 
     );	
 }
 
