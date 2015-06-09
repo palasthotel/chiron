@@ -20,9 +20,16 @@ class chiron_item {
   public function load($array){
     $this->id = $array['id'];
     $this->source = $array['id_source'];
-    $this->date = $array['timestamp'];
-    $this->title = $array['title'];
-    $this->text = $array['text'];
+    $this->date = $array['timestamp']; 
+	
+    $this->title = $array['title'];  
+	if(!chiron_is_utf8($this->title)){
+		$title = utf8_encode($this->title);
+	}
+    $this->text = $array['text']; 
+	if(!chiron_is_utf8($this->text)){
+		$title = utf8_encode($this->text);
+	}
     $this->url = $array['url'];
     $this->image = $array['image'];
     $this->item_meta = array();    
@@ -30,8 +37,14 @@ class chiron_item {
 
   public function fill($item) {
     $this->date=$item->get_date("Y-m-d H:i:s");
-    $this->title=$item->get_title();
-    $this->text=$item->get_content();
+    $this->title=$item->get_title(); 
+	if(!chiron_is_utf8($this->title)){
+		$title = utf8_encode($this->title);
+	}
+    $this->text=$item->get_content(); 
+	if(!chiron_is_utf8($this->text)){
+		$title = utf8_encode($this->text);
+	}
     $this->url=$item->get_permalink();
   }
   

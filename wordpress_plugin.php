@@ -28,7 +28,7 @@ function chiron_t($str){
 	return $str;
 }
 
-function db_query($querystring){
+function chiron_db_query($querystring){
 	global $chiron_db;
 	$querystring = str_replace("{", $wpdb->prefix, $querystring);
 	$querystring = str_replace("}", "", $querystring);
@@ -37,6 +37,17 @@ function db_query($querystring){
     return $result;
 }
 
+function chiron_is_utf8($string) {
+    return (bool) preg_match('//u', $string);
+}    
+
+function chiron_clean_string($string){
+	if(!chiron_is_utf8($string)){
+		return utf8_encode($string);
+	}else{
+		return $string;
+	}
+}         
 
 
 function chiron_wp_activate(){
@@ -242,13 +253,18 @@ function chiron_wp_dashboard(){
 							$classes = implode(" ", $rowclasses);
 							
 							$output .= "<tr class='".$classes."'>";
-							$output .= "<td>".$chiron->sources[$item->source]->title."</td>";
+							$output .= "<td>".chiron_clean_string($chiron->sources[$item->source]->title)."</td>";
 							$title = "";
 							if($item->title !=""){
 								$title = $item->title;
 							}else{
 								$title = "~";
-							}
+							}    
+							
+							if(!chiron_is_utf8($title)){
+								$title = utf8_encode($title);
+							}  
+							
 							$output .= "<td><a href='".$item->url."'><span class='dashicons dashicons-yes'></span>".$title."</a></td>";
 							$output .= "</tr>";
 							
@@ -889,12 +905,10 @@ function chiron_wp_cron_exec(){
 	$sources = $chiron->sources_run_cron();
 }
 
-
-
-
 // Widgets
 
 add_action( 'wp_dashboard_setup', 'chiron_wp_add_widgets' );
+
 
 /**
  * Add a widget to the dashboard. Implementation of action 'wp_dashboard_setup'.
@@ -908,16 +922,9 @@ function chiron_wp_add_widgets() {
     );	
 }
 
-
 /**
  * Create the function to output the contents of our Dashboard Widget.
  */
 function chiron_wp_dashboard_widget_quick_add_feed_function($drafts = false) {
 	chiron_wp_quick_add_form();	
 }
-
-
-
-
-
-
