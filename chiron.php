@@ -85,13 +85,14 @@ function chiron_admin_head() {
    print '<link rel="icon" type="image/x-icon" href='.home_url().'"/wp-content/plugins/chiron/wordpress/chiron-favicon-5.png"/>';
 }
 
+// Only add the Favicon on "our" admin pages.
 if($_GET['page']=='chiron_dashboard'){
 	add_action('admin_head', 'chiron_admin_head');
 }
 
 
-function chiron_wp_admin_menu()
-{        
+// Adding all the lovely Menu-Items
+function chiron_wp_admin_menu(){        
 		// Main Backend Menu Item
         add_menu_page('Reader','Chiron','read','chiron_dashboard','chiron_wp_dashboard', 'dashicons-book-alt', '76');
 		// Submenu Items
@@ -115,6 +116,8 @@ function chiron_wp_admin_menu()
 }		
 
 add_action("admin_menu","chiron_wp_admin_menu");
+
+
 
 function chiron_wp_debug(){
 	add_action('admin_head', 'chiron_admin_head');

@@ -1,10 +1,10 @@
 <?php
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
-if(CHIRON_IMPLEMENTATION == "Standalone"){
-	include 'config.php';
+if ( !class_exists('SimplePie') ){
+	require_once( ABSPATH . WPINC . '/class-simplepie.php' );   
 }
-include 'simplepie.inc';
+
 include 'chiron_db.php';
 include 'chiron_core.class.php';
 include 'chiron_core.db-class.php';
