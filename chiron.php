@@ -1,9 +1,9 @@
 <?php
 /**
 * Plugin Name: Chiron
-* Description: The Teacher of Heros
+* Description: The Teacher of Heroes and Heroines
 * Version: 0.1
-* Author: Palasthotel (in Person: Benjamin Birkenhake, Enno Welbers)
+* Author: Palasthotel (in Person: Benjamin Birkenhake)
 * Author URI: http://www.palasthotel.de
 */
 
@@ -21,26 +21,32 @@ define(CHIRON_IMPLEMENTATION, "Wordpress");
 // This loads all Classes and creates Instances of the classes chiron_db and chiron_core.
 require('core/classes/bootstrap.php');
 
+// Use own translation Tool
 function chiron_t($str){
 	if(function_exists('t')){
 		return t($str);	
+	}
+	if(function_exists('__')){
+		return __( $text, "chiron");
 	}	
 	return $str;
 }
 
+// Own Database Query-Wrapper based on the Data-Classe
 function chiron_db_query($querystring){
 	global $chiron_db;
 	$querystring = str_replace("{", $wpdb->prefix, $querystring);
 	$querystring = str_replace("}", "", $querystring);
-
     $result = $chiron_db->query($querystring) or die($querystring." failed: ".$chiron_db->error);
     return $result;
 }
 
+// Helper-Function for UTF8-Frakups
 function chiron_is_utf8($string) {
     return (bool) preg_match('//u', $string);
 }    
 
+// Making all Strings UTF8, which aren't UTF8
 function chiron_clean_string($string){
 	if(!chiron_is_utf8($string)){
 		return utf8_encode($string);
@@ -74,7 +80,7 @@ function chiron_wp_activate(){
 
 register_activation_hook(__FILE__, "chiron_wp_activate");
 
-// THIS GIVES US SOME OPTIONS FOR STYLING THE ADMIN AREA
+// Let's add our own Favicon for the News Dashboard
 function chiron_admin_head() {
    print '<link rel="icon" type="image/x-icon" href='.home_url().'"/wp-content/plugins/chiron/wordpress/chiron-favicon-5.png"/>';
 }
