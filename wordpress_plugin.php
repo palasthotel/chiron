@@ -21,7 +21,10 @@ define(CHIRON_IMPLEMENTATION, "Wordpress");
 // This loads all Classes and creates Instances of the classes chiron_db and chiron_core.
 require('core/classes/bootstrap.php');
 
-function t($str){
+function chiron_t($str){
+	if(function_exists('t')){
+		return t($str);	
+	}	
 	return $str;
 }
 
