@@ -1,6 +1,6 @@
 # Chiron
 
-Chiron is the Teacher of Heros and Heroines. It's a PHP based multi-user, multi-sources, multi-output, multi-cms News-Reader and Cross-Site-Networking Tool. It currently provides one-code-base-fits-all Integration for Wordpress and Drupal.
+Chiron is the Teacher of Heros and Heroines. It's a PHP based multi-user, multi-sources, multi-output, multi-cms News-Reader and Cross-Site-Networking Tool. It currently provides one-code-base-fits-all Integration for Wordpress. Drupal will follow soon, hopefully.
 
 
 ## References
