@@ -1,14 +1,5 @@
-<html>
-<head>
-</head>
-<body>
-  <h1>Chiron Content Hub</h1>
 <?php
 
-include 'classes/bootstrap.php';
-
-$chiron = new chiron();
+// Silence is golden, and silver, and bronze
 
 ?>
-</body>
-</html>

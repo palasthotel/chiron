@@ -76,7 +76,7 @@ register_activation_hook(__FILE__, "chiron_wp_activate");
 
 // THIS GIVES US SOME OPTIONS FOR STYLING THE ADMIN AREA
 function chiron_admin_head() {
-   print '<link rel="icon" type="image/x-icon" href='.home-url().'"/wp-content/plugins/chiron/wordpress/chiron-favicon-5.png"/>';
+   print '<link rel="icon" type="image/x-icon" href='.home_url().'"/wp-content/plugins/chiron/wordpress/chiron-favicon-5.png"/>';
 }
 
 if($_GET['page']=='chiron_dashboard'){
