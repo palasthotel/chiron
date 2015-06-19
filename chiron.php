@@ -2,7 +2,7 @@
 /**
 * Plugin Name: Chiron
 * Description: The Teacher of Heroes and Heroines
-* Version: 0.1
+* Version: 0.9b
 * Author: Palasthotel (in Person: Benjamin Birkenhake)
 * Author URI: http://www.palasthotel.de
 */
