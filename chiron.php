@@ -82,7 +82,7 @@ register_activation_hook(__FILE__, "chiron_wp_activate");
 
 // Let's add our own Favicon for the News Dashboard
 function chiron_admin_head() {
-   print '<link rel="icon" type="image/x-icon" href='.home_url().'"/wp-content/plugins/chiron/wordpress/chiron-favicon-5.png"/>';
+   print '<link rel="icon" type="image/x-icon" href="'.plugins_url( 'chiron-favicon.png', __FILE__ ).'"/>';
 }
 
 // Only add the Favicon on "our" admin pages.
@@ -93,8 +93,10 @@ if($_GET['page']=='chiron_dashboard'){
 
 // Adding all the lovely Menu-Items
 function chiron_wp_admin_menu(){        
+		
 		// Main Backend Menu Item
         add_menu_page('Reader','Chiron','read','chiron_dashboard','chiron_wp_dashboard', 'dashicons-book-alt', '76');
+		
 		// Submenu Items
 		add_submenu_page('chiron_dashboard', 'News-Dashboard', 'News-Dashboard', 'read', 'chiron_dashboard', 'chiron_wp_dashboard' );
 		add_submenu_page('chiron_dashboard', 'Your Subscriptions', 'Your Subscriptions', 'read', 'chiron_manage_subscriptions', 'chiron_wp_manage_subscriptions' );
@@ -102,6 +104,7 @@ function chiron_wp_admin_menu(){
 		add_submenu_page('chiron_dashboard', 'All Sources', 'All Sources', 'read', 'chiron_manage_sources', 'chiron_wp_manage_sources' );
 		add_submenu_page('chiron_dashboard', 'Settings', 'Settings', 'read', 'chiron_settings', 'chiron_wp_settings' );
 		add_submenu_page('chiron_dashboard', 'Debugging', 'Debugging', 'read', 'chiron_debugging', 'chiron_wp_debug' );
+		
 		// Functions which need not be available via Wordpress' Admin Menu
 		add_submenu_page('null', 'Add new Source', 'Add new Source', 'read', 'chiron_add_source', 'chiron_wp_add_source' );
 		add_submenu_page('null', 'Refresh Sources', 'Refresh Sources', 'read', 'chiron_refresh_sources', 'chiron_wp_refresh_sources' );
