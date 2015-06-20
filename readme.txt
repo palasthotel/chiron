@@ -42,7 +42,7 @@ Chiron was first built to be used within the lovely Wordpress. If you're not fam
 
 ### Drupal
 
-Chiron is also available for the mighty mighty Drupal. Check it out, if you're looking for some serious CMS-Stuff.
+Chiron will also available for the mighty mighty Drupal. Check it out, if you're looking for some serious CMS-Stuff.
 
 * http://drupal.org/
 
@@ -59,12 +59,23 @@ e.g.
 
 == Frequently Asked Questions ==
 
+= Why does it only show yesterdays News? =
+
+That's the Idea. You only need to visit Chiron once a day.
+Do something great with the rest of your time!
+
 
 == Screenshots ==
 
+1. The main personalized Dashboard of Chiron.
 
 == Changelog ==
 
+= 0.9d =
+* Extended readme.txt
+
+= 0.9c = 
+* Replaced home_url() by plugins_url();
 
 = 0.9b =
 * Added WordPress' own readme.txt
