@@ -14,7 +14,7 @@ Chiron is a PHP based multi-user, multi-sources, multi-output, multi-cms News-Re
 == Description ==
 
 
-# Chiron
+## Chiron
 
 Chiron is the Teacher of Heros and Heroines. It's a PHP based multi-user, multi-sources, multi-output, multi-cms News-Reader and Cross-Site-Networking Tool. It currently provides one-code-base-fits-all Integration for Wordpress. Drupal will follow soon, hopefully.
 
@@ -53,11 +53,8 @@ Chiron will also available for the mighty mighty Drupal. Check it out, if you're
 
 This section describes how to install the plugin and get it working.
 
-e.g.
-
 1. Upload `plugin-name.php` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Place `<?php do_action('plugin_name_hook'); ?>` in your templates
+2. Activate the plugin through the 'Plugins' menu in WordPress
 
 == Frequently Asked Questions ==
 
