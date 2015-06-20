@@ -69,6 +69,10 @@ Do something great with the rest of your time!
 
 1. The main personalized Dashboard of Chiron.
 
+== Upgrade Notice ==
+
+We currently don't have an upgrade Notice for you.
+
 == Changelog ==
 
 = 0.9d =
