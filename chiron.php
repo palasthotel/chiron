@@ -17,8 +17,11 @@ define(CHIRON_DB_DBS, DB_NAME);
 define(CHIRON_DB_PRE, $table_prefix);
 define(CHIRON_IMPLEMENTATION, "Wordpress");
 
+// Get our precious Simplepie
 if ( !class_exists('SimplePie') and file_exists(ABSPATH . WPINC . '/class-simplepie.php')){
 	require_once( ABSPATH . WPINC . '/class-simplepie.php' );   
+}elseif(!class_exists('SimplePie')){
+	die("SimplePie couldn't be loaded.");
 }
 
 // Then bootstrap Chiron.
@@ -405,8 +408,8 @@ function chiron_wp_add_source(){
 	
 	if(isset($_POST) && !empty($_POST)){
 		$source = new chiron_source();
-		$source->title = $_POST['title'];
-		$source->url = $_POST['url'];
+		$source->title = sanitize_text_field($_POST['title']);
+		$source->url = sanitize_text_field($_POST['url']);
 		$result = $source->add();
 		if($result == "1"){
 			print '<div id="message" class="updated below-h2"><p>Source added successfully.</p></div>';
