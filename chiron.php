@@ -86,7 +86,7 @@ function chiron_admin_head() {
 }
 
 // Only add the Favicon on "our" admin pages.
-if($_GET['page']=='chiron_dashboard'){
+if(sanitize_text_field($_GET['page'])=='chiron_dashboard'){
 	add_action('admin_head', 'chiron_admin_head');
 }
 
@@ -199,10 +199,10 @@ function chiron_wp_dashboard(){
 	
 	// Check and get the current or selected Date
 	if($_GET["day"]!=""){
-	    if($_GET["day"]== date("Y-m-d",time())){
+	    if($_GET["day"] == date("Y-m-d",time())){
 	      $date = date("Y-m-d", time()-60*60*24);
 	    }else{
-	      $date = $_GET["day"];
+	      $date = sanitize_text_field($_GET["day"]);
 	    }
 	 }else{
 	    $date = date("Y-m-d", time()-60*60*24);
@@ -426,9 +426,9 @@ function chiron_wp_edit_source(){
 	
 	if(isset($_POST) && !empty($_POST)){
 		$source = new chiron_source();
-		$source->id = $_GET['source_id'];
-		$source->title = $_POST['title'];
-		$source->url = $_POST['url'];
+		$source->id = sanitize_text_field($_GET['source_id']);
+		$source->title = sanitize_text_field($_POST['title']);
+		$source->url = sanitize_text_field($_POST['url']);
 		$result = $source->update();
 		if($result == "1"){
 			print '<div id="message" class="updated below-h2"><p>Source updated successfully.</p></div>';
@@ -438,7 +438,7 @@ function chiron_wp_edit_source(){
 	}
 	
 	if(isset($_GET['source_id']) && !empty($_GET['source_id'])){
-		$source_id = $_GET['source_id'];
+		$source_id = sanitize_text_field($_GET['source_id']);
 		$source = new chiron_source($source_id);
 		print "<div class='form-wrap'>";
 		print '<form method="post">';
@@ -479,7 +479,7 @@ function chiron_wp_refresh_source(){
 	print "<div class='wrap'>";
 	print "<h2>Refresh Source</h2>";
 	if(isset($_GET['source_id']) && !empty($_GET['source_id'])){
-		$source_id = $_GET['source_id'];
+		$source_id = sanitize_text_field($_GET['source_id']);
 		$source = new chiron_source($source_id);
 		$source->refresh();
 		print "<p>Updating Source <strong>".$source->title."</strong> … added ".$source->lastadded." items.";
@@ -583,16 +583,16 @@ function chiron_wp_edit_category(){
 	$uid = $user->data->ID;
 	if(isset($_POST) && !empty($_POST)){
 		$category = new chiron_category();
-		$category->id = $_GET['category_id'];
-		$category->title = $_POST['title'];
-		$category->weight = $_POST['weight'];
+		$category->id = sanitize_text_field($_GET['category_id']);
+		$category->title = sanitize_text_field($_POST['title']);
+		$category->weight = sanitize_text_field($_POST['weight']);
 		$result = $category->update();
 		if($result == "1"){
 			print '<div id="message" class="updated below-h2"><p>Category added successfully.</p></div>';
 		}
 	}
 	if(isset($_GET['category_id']) && !empty($_GET['category_id'])){
-		$category_id = $_GET['category_id'];
+		$category_id = sanitize_text_field($_GET['category_id']);
 		$category = new chiron_category($category_id);
 		print "<div class='form-wrap'>";
 		print '<form method="post">';
@@ -703,8 +703,8 @@ function chiron_wp_manage_subscription(){
 	if(isset($_POST) && !empty($_POST) && isset($_GET['source_id']) && !empty($_GET['source_id'])){
 		$subscription = new chiron_subscription();
 		$subscription->id_user = $uid;
-		$subscription->id_source = $_GET['source_id'];
-		$subscription->id_category = $_POST['category_id'];
+		$subscription->id_source = sanitize_text_field($_GET['source_id']);
+		$subscription->id_category = sanitize_text_field($_POST['category_id']);
 		if(!$subscription->exists()){
 			$result = $subscription->add();
 			if($result){
@@ -727,7 +727,7 @@ function chiron_wp_manage_subscription(){
 	
 	// Then Render the Form (again)
 	if(isset($_GET['source_id']) && !empty($_GET['source_id'])){
-		$source_id = $_GET['source_id'];
+		$source_id = sanitize_text_field($_GET['source_id']);
 		$source = new chiron_source($source_id);
 		$subscription = new chiron_subscription();
 		$subscription->id_source = $source_id;
@@ -769,7 +769,7 @@ function chiron_wp_delete_subscription(){
 	print "<div class='wrap'>";
 	print "<h2>Unscribe from a Source</h2>";
 	if(isset($_GET['source_id']) && !empty($_GET['source_id'])){
-		$source_id = $_GET['source_id'];
+		$source_id = sanitize_text_field($_GET['source_id']);
 		$source = new chiron_source($source_id);
 	}
 	$subscription = new chiron_subscription();
