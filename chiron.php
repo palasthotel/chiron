@@ -17,6 +17,10 @@ define(CHIRON_DB_DBS, DB_NAME);
 define(CHIRON_DB_PRE, $table_prefix);
 define(CHIRON_IMPLEMENTATION, "Wordpress");
 
+if ( !class_exists('SimplePie') and file_exists(ABSPATH . WPINC . '/class-simplepie.php')){
+	require_once( ABSPATH . WPINC . '/class-simplepie.php' );   
+}
+
 // Then bootstrap Chiron.
 // This loads all Classes and creates Instances of the classes chiron_db and chiron_core.
 require('core/classes/bootstrap.php');
