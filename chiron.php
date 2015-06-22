@@ -402,7 +402,7 @@ function chiron_wp_manage_sources(){
 function chiron_wp_add_source(){
 	global $chiron;
 	print "<div class='wrap'>";
-	print "<h2>"__("Add a new Source", "chiron")."</h2>";
+	print "<h2>".__("Add a new Source", "chiron")."</h2>";
 	
 	if(isset($_POST) && !empty($_POST)){
 		$source = new chiron_source();
@@ -416,7 +416,7 @@ function chiron_wp_add_source(){
 	
 	print "<div class='form-wrap'>";
 	print '<form method="post">';
-	print '<div class="form-field form-required"><label>URL of your new Source</label><input type="text" name="url" /><p>The URL under which your Source is awailable.</p></div>';
+	print '<div class="form-field form-required"><label>'.__("URL of your new Source", "chiron").'</label><input type="text" name="url" /><p>The URL under which your Source is awailable.</p></div>';
 	print '<div class="form-field form-required"><label>Title of your new Source</label><input type="text" name="title"><p>If you leave it blank, the Title will be created from the Source itself. You may edit it later on.</p></div>';
 	print '<input type="submit">';
 	print '</form>';
