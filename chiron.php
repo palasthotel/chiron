@@ -133,7 +133,7 @@ function chiron_wp_debug(){
 	add_action('admin_head', 'chiron_admin_head');
 	global $wp_version;
 	print "<div class='wrap'>";
-	print "<h2>Debugging Chiron</h2>";
+	print "<h2>".__("Debugging Chiron", "chrion")."</h2>";
 	
 	// Basic Data
 	
@@ -172,11 +172,12 @@ function chiron_wp_debug(){
 	print "</div> <!-- // .wrap -->";
 }
 
+
 function chiron_wp_settings(){
 	add_action('admin_head', 'chiron_admin_head');
 	print "<div class='wrap'>";
-	print "<h2>Chiron Settings</h2>";
-	print "<p>Manage your Settings, young Hero or Heroine!</p>";
+	print "<h2>".__("Chiron Settings", "chiron")."</h2>";
+	print "<p>".__("Manage your Settings, young Hero or Heroine!", "chiron")."</p>";
 	print "</div> <!-- // .wrap -->";
 }
 
@@ -193,13 +194,13 @@ function chiron_wp_dashboard(){
 	
 	// Wrapper Div and Header
 	print "<div class='wrap'>";
-	print "<h2>Welcome to your News-Dashboard, young Hero or Heroine!</h2>";
+	print "<h2>".__("Welcome to your News-Dashboard, young Hero or Heroine!", "chiron")."</h2>";
 	
 	
 	// Check Version
 	$version = explode(".", $wp_version);
-	if(!($version[0] >= "3" and $version[1]>=8)){
-		print "<p>WARNING: Chiron hasn't been tested with Wordpress ".$wp_version.". Please deactivate the Plugin or use it on your own risk!</p>";
+	if(!($version[0] >= "3")){
+		printf(__('<p>WARNING: Chiron hasn\'t been tested with Wordpress Version %1$s. Please deactivate the Plugin or use it on your own risk!</p>', "chiron"), $wp_version);
 	}
 	
 	chiron_wp_quick_add_form();
@@ -216,12 +217,11 @@ function chiron_wp_dashboard(){
 	 }
 	 $timestamp = strtotime($date);
 		
-
-	
+		
 	$day = date("Y-m-d", $timestamp);
 	$chiron->items_get_by_day_and_user($day, $id_user);
 	
-	print "<p><strong>".$items_count[0]." items</strong> from <strong>".$sources_count[0]." sources</strong> and <strong>".count($chiron->items)." news of ".date("l", $timestamp)." the ".date("j. F Y", $timestamp)."</strong> are waiting to be read by you.</p>";
+	printf(__('<p><strong>%1$d items</strong> from <strong>%2$d sources</strong> and <strong>%3$d news of %4 the %5$s</strong> are waiting to be read by you.</p>', "chiron"), $items_count[0], $sources_count[0], count($chiron->items), date("l", $timestamp), date("j. F Y", $timestamp));
 	
 	$pagenav = "";
 	$pagenav .= '<div class="tablenav">';    
@@ -244,13 +244,11 @@ function chiron_wp_dashboard(){
 	
 	if(count($chiron->items)>0){
 		
-		
-		
 		print "<table class='wp-list-table widefat chiron-news'>";
 		print '<thead>';
 		print '<tr>';
-		print '<th>Source</th>';
-		print '<th>Title</th>';
+		print '<th>'.__("Source", "chiron").'</th>';
+		print '<th>'.__("Title", "chiron").'</th>';
 		print '</tr>';
 		print '</thead>';
 		
@@ -300,7 +298,7 @@ function chiron_wp_dashboard(){
 			if($found>0){
 				$header  = "";
 				$header .= "<tr>";
-				$header .= "<td colspan='2'><h3 style='display:inline'>".$category->title."</h3> with ".$found." items</td>";
+				$header .= sprintf(_n('<td colspan="2"><h3 style="display:inline">%1$s</h3> with %2$d item</td>', '<td colspan="2"><h3 style="display:inline">%1$s</h3> with %2$d items</td>', $found, "chiron"), $category->title, $found);
 				$header .= "</tr>";
 				print $header.$output;
 			}			
@@ -308,8 +306,8 @@ function chiron_wp_dashboard(){
 	
 		print '<tfoot>';
 		print '<tr>';
-		print '<th>Source</th>';
-		print '<th>Title</th>';		
+		print '<th>'.__("Source", "chiron").'</th>';
+		print '<th>'.__("Title", "chiron").'</th>';		
 		print '</tr>';
 		print '</tfoot>';
 		print "</table>";
@@ -324,15 +322,15 @@ function chiron_wp_dashboard(){
 		print $pagenav;
 		
 	}
-	print "<p>".count($chiron->items)." yesterdays news.</p>";
+	printf(__('<p>%1$s yesterdays news.</p>', "chiron"), count($chiron->items));
 	print "</div>";
 }
 
 function chiron_wp_quick_add_form(){
 	// Quick add Feed
 	print "<form class='chiron-quickadd' style='text-align:left;' action='admin.php?page=chiron_add_source_and_subscription' method='post'>";
-	print "<input type='text' name='url' placeholder='Add a URL of a Feed here' style='width:50%; height:28px;'/>";
-	print "<input type='submit' class='button' value='Quick add new Feed' style=''>";
+	print "<input type='text' name='url' placeholder='".__("Add a URL of a Feed here", "chiron")."' style='width:50%; height:28px;'/>";
+	print "<input type='submit' class='button' value='".__("Quick add new Feed", "chiron")."' style=''>";
 	print "</form>";
 }
 
@@ -388,11 +386,11 @@ function chiron_wp_manage_sources(){
 		}
 		print '<tfoot>';
 		print '<tr>';
-		print '<th>Titel</th>';
-		print '<th>URL</th>';
-		print '<th>Last Checked</th>';
-		print '<th>Status</th>';
-		print "<th>Operations</th>";
+		print '<th>'.__("Titel", "chiron").'</th>';
+		print '<th>'.__("URL", "chiron").'</th>';
+		print '<th>'.__("Last Checked", "chiron").'</th>';
+		print '<th>'.__("Status", "chiron").'</th>';
+		print '<th>'.__("Operations", "chiron").'</th>';
 		print '</tr>';
 		print '</tfoot>';
 		print "</table>";
@@ -404,7 +402,7 @@ function chiron_wp_manage_sources(){
 function chiron_wp_add_source(){
 	global $chiron;
 	print "<div class='wrap'>";
-	print "<h2>Add a new Source</h2>";
+	print "<h2>"__("Add a new Source", "chiron")."</h2>";
 	
 	if(isset($_POST) && !empty($_POST)){
 		$source = new chiron_source();
@@ -412,7 +410,7 @@ function chiron_wp_add_source(){
 		$source->url = sanitize_text_field($_POST['url']);
 		$result = $source->add();
 		if($result == "1"){
-			print '<div id="message" class="updated below-h2"><p>Source added successfully.</p></div>';
+			print '<div id="message" class="updated below-h2"><p>'.__("Source added successfully.", "chiron").'</p></div>';
 		}
 	}
 	
