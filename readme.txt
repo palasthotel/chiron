@@ -4,7 +4,7 @@ Donate link:
 Tags: rss, news, feedreader, networking, social network
 Requires at least: 4.0.1
 Tested up to: 4.2.2
-Stable tag: 0.9b
+Stable tag: 0.9g
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -73,6 +73,16 @@ Do something great with the rest of your time!
 We currently don't have an upgrade Notice for you.
 
 == Changelog ==
+
+= 0.9g =
+* Added even more security and Updated readme.txt
+
+= 0.9f =
+* Finalized i8n, improved utf8 and added some more security.
+
+= 0.9e =
+* Added Security Fixes and started worling on i18n
+
 
 = 0.9d =
 * Extended readme.txt

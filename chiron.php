@@ -2,7 +2,7 @@
 /**
 * Plugin Name: Chiron
 * Description: The Teacher of Heroes and Heroines
-* Version: 0.9e
+* Version: 0.9g
 * Author: Palasthotel (in Person: Benjamin Birkenhake)
 * Author URI: http://www.palasthotel.de
 */
@@ -81,7 +81,7 @@ function chiron_admin_head() {
 }
 
 // Only add the Favicon on "our" admin pages.
-if(sanitize_text_field($_GET['page'])=='chiron_dashboard'){
+if($_GET['page'] == 'chiron_dashboard'){
 	add_action('admin_head', 'chiron_admin_head');
 }
 
@@ -545,8 +545,8 @@ function chiron_wp_add_category(){
 	if(isset($_POST) && !empty($_POST)){
 		$category = new chiron_category();
 		$category->user = $uid;
-		$category->title = $_POST['title'];
-		$category->weight = $_POST['weight'];
+		$category->title = sanitize_text_field($_POST['title']);
+		$category->weight = sanitize_text_field($_POST['weight']);
 		$result = $category->add();
 		if($result == "1"){
 			print '<div id="message" class="updated below-h2"><p>'.__("Category added successfully.", "chiron").'</p></div>';
