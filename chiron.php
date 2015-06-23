@@ -133,7 +133,7 @@ function chiron_wp_debug(){
 	add_action('admin_head', 'chiron_admin_head');
 	global $wp_version;
 	print "<div class='wrap'>";
-	print "<h2>".__("Debugging Chiron", "chrion")."</h2>";
+	print "<h2>".__("Debugging Chiron", "chiron")."</h2>";
 	
 	// Basic Data
 	
@@ -416,8 +416,8 @@ function chiron_wp_add_source(){
 	
 	print "<div class='form-wrap'>";
 	print '<form method="post">';
-	print '<div class="form-field form-required"><label>'.__("URL of your new Source", "chiron").'</label><input type="text" name="url" /><p>The URL under which your Source is awailable.</p></div>';
-	print '<div class="form-field form-required"><label>Title of your new Source</label><input type="text" name="title"><p>If you leave it blank, the Title will be created from the Source itself. You may edit it later on.</p></div>';
+	print '<div class="form-field form-required"><label>'.__("URL of your new Source", "chiron").'</label><input type="text" name="url" /><p>'.__("The URL under which your Source is awailable.", "chiron").'</p></div>';
+	print '<div class="form-field form-required"><label>'.__("Title of your new Source", "chiron").'</label><input type="text" name="title"><p>'.__("If you leave it blank, the Title will be created from the Source itself. You may edit it later on.", "chiron").'</p></div>';
 	print '<input type="submit">';
 	print '</form>';
 	print "</div> <!-- // .form-wrap -->";	
@@ -427,7 +427,7 @@ function chiron_wp_add_source(){
 function chiron_wp_edit_source(){
 	global $chiron;
 	print "<div class='wrap'>";
-	print "<h2>Edit Source</h2>";
+	print "<h2>".__("Edit Source", "chiron")."</h2>";
 	
 	if(isset($_POST) && !empty($_POST)){
 		$source = new chiron_source();
@@ -436,9 +436,9 @@ function chiron_wp_edit_source(){
 		$source->url = sanitize_text_field($_POST['url']);
 		$result = $source->update();
 		if($result == "1"){
-			print '<div id="message" class="updated below-h2"><p>Source updated successfully.</p></div>';
+			print '<div id="message" class="updated below-h2"><p>'.__("Source updated successfully.", "chiron").'</p></div>';
 		}else{
-			print '<div id="message" class="updated below-h2"><p>Source <strong>not</strong> updated.</p></div>';
+			print '<div id="message" class="updated below-h2"><p>'.__("Source <strong>not</strong> updated.", "chiron").'</p></div>';
 		}
 	}
 	
@@ -447,8 +447,8 @@ function chiron_wp_edit_source(){
 		$source = new chiron_source($source_id);
 		print "<div class='form-wrap'>";
 		print '<form method="post">';
-		print '<div class="form-field form-required"><label>New URL of your Source</label><input type="text" name="url" value="'.$source->url.'"/><p>The URL under which your Source is awailable.</p></div>';
-		print '<div class="form-field form-required"><label>New Title of your Source</label><input type="text" name="title" value="'.$source->title.'"><p>If you leave it blank, the Title will be created from the Source itself. You may edit it later on.</p></div>';
+		print '<div class="form-field form-required"><label>'.__("New URL of your Source", "chiron").'</label><input type="text" name="url" value="'.$source->url.'"/><p>'.__("The URL under which your Source is awailable.", 'chiron').'</p></div>';
+		print '<div class="form-field form-required"><label>'.__("New Title of your Source", "chiron").'</label><input type="text" name="title" value="'.$source->title.'"><p>'.__("If you leave it blank, the Title will be created from the Source itself. You may edit it later on.", "chiron").'</p></div>';
 		print '<input type="submit">';
 		print '</form>';
 		print "</div> <!-- // .form-wrap -->";
@@ -463,7 +463,7 @@ function chiron_wp_edit_source(){
 function chiron_wp_refresh_sources(){
 	global $chiron;
 	print "<div class='wrap'>";
-	print "<h2>Refreshing some Sources</h2>";
+	print "<h2>".__("Refreshing some Sources", "chiron")."</h2>";
 	$sources = $chiron->sources_run_cron();
 	foreach($sources as $source){
 		print "<p>Updating Source <strong>".$source->title."</strong> … added ".$source->lastadded." items.";
@@ -482,7 +482,7 @@ function chiron_wp_refresh_sources(){
 
 function chiron_wp_refresh_source(){
 	print "<div class='wrap'>";
-	print "<h2>Refresh Source</h2>";
+	print "<h2>".__("Refresh Source", "chiron")."</h2>";
 	if(isset($_GET['source_id']) && !empty($_GET['source_id'])){
 		$source_id = sanitize_text_field($_GET['source_id']);
 		$source = new chiron_source($source_id);
@@ -508,7 +508,7 @@ function chiron_wp_manage_categories(){
 	$user = wp_get_current_user(); 
 	$uid = $user->data->ID;
 	print "<div class='wrap'>";
-	print "<h2>Categories of your Sources <a class='add-new-h2' href='?page=chiron_add_category'>Add New</a></h2>";
+	print "<h2>".__("Categories of your Sources", "chiron")."<a class='add-new-h2' href='?page=chiron_add_category'>".__("Add New", "chiron")."</a></h2>";
 	print "<p>Manage the Categories of your Sources, young Hero or Heroine!</p>";
 	$categories = $chiron->categories_get_all_by_user($uid);
 	$no = count($categories);
@@ -556,7 +556,7 @@ function chiron_wp_manage_categories(){
 function chiron_wp_add_category(){
 	global $chiron;
 	print "<div class='wrap'>";
-	print "<h2>Add a new Category</h2>";
+	print "<h2>".__("Add a new Category", "chiron")."</h2>";
 	$user = wp_get_current_user(); 
 	$uid = $user->data->ID;
 	if(isset($_POST) && !empty($_POST)){
@@ -583,7 +583,7 @@ function chiron_wp_add_category(){
 function chiron_wp_edit_category(){
 	global $chiron;
 	print "<div class='wrap'>";
-	print "<h2>Edit Category</h2>";
+	print "<h2>".__("Edit Category", "chiron")."</h2>";
 	$user = wp_get_current_user(); 
 	$uid = $user->data->ID;
 	if(isset($_POST) && !empty($_POST)){
@@ -608,7 +608,7 @@ function chiron_wp_edit_category(){
 		print "</div> <!-- // .form-wrap -->";	
 		
 	}else{
-		print "<p>No Category selected for editin.</p>";
+		print "<p>No Category selected for editing.</p>";
 	}
 	
 	print "</div> <!-- // .wrap -->";
@@ -623,7 +623,7 @@ function chiron_wp_manage_subscriptions(){
 	$itemcount = $chiron->sources_get_item_count();
 		
 	print "<div class='wrap'>";
-	print "<h2>Manage your Subscriptions</h2>";	
+	print "<h2>".__("Manage your Subscriptions", "chiron")."</h2>";	
 		
 	$no = count($chiron->sources);
 	print "<p>You have subscribed ".$no." magnificent Sources of Information.</p>";
@@ -702,7 +702,7 @@ function chiron_wp_manage_subscription(){
 	$user = wp_get_current_user(); 
 	$uid = $user->data->ID;
 	print "<div class='wrap'>";
-	print "<h2>Manage a Subscription</h2>";
+	print "<h2>".__("Manage a Subscription", "chiron")."</h2>";
 	
 	// First check, wether there are Post-Variables
 	if(isset($_POST) && !empty($_POST) && isset($_GET['source_id']) && !empty($_GET['source_id'])){
@@ -772,7 +772,7 @@ function chiron_wp_delete_subscription(){
 	$user = wp_get_current_user(); 
 	$uid = $user->data->ID;
 	print "<div class='wrap'>";
-	print "<h2>Unscribe from a Source</h2>";
+	print "<h2>".__("Unscribe from a Source", "chiron")."</h2>";
 	if(isset($_GET['source_id']) && !empty($_GET['source_id'])){
 		$source_id = sanitize_text_field($_GET['source_id']);
 		$source = new chiron_source($source_id);
@@ -806,7 +806,7 @@ function chiron_wp_add_source_and_subscription(){
 	
 	
 	print "<div class='wrap'>";
-	print "<h2>Add New Feed Source</h2>";
+	print "<h2>".__("Add New Feed Source", "chiron")."</h2>";
 	// Set the URL
 	$url = "";
 	if(isset($_POST['url']) and !empty($_POST['url'])){
