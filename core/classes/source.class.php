@@ -23,7 +23,7 @@ class chiron_source {
   public function load($array) {
     $this->id = $array['id'];
 	$this->type = $array['type'];
-    $this->title = $array['title'];
+    $this->title = chiron_clean_string($array['title']);
     $this->url = $array['url'];    
 	$this->status = $array['status'];    
     $this->lastchecked = $array['lastchecked'];	
@@ -78,6 +78,7 @@ class chiron_source {
        $counter = 0;
        foreach($items as $item){	
           $converted = new chiron_item();
+          // Fill with an SimplePie-Item
           $converted->fill($item);
           $converted->source = $this->id;
 		  $result = $converted->add();      
