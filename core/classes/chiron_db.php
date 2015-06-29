@@ -336,7 +336,7 @@ class chiron_db {
 		$query.=",constraint primary key (".implode(",", $data['primary key']).")";
 		if(isset($data['unique keys'])){
 			foreach($unique as $uni_id => $uni_fields){
-				$query.=",constraint ".$uni_id" unique (".implode(",", $$uni_fields).")";
+				$query.=",constraint ".$uni_id." unique (".implode(",", $$uni_fields).")";
 			}
 		}
 		$query.=") ";
