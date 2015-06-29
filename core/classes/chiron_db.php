@@ -20,6 +20,7 @@ class chiron_db {
 		$this->schema['chiron_source'] = array();
 		$this->schema['chiron_source']['description'] = chiron_t('Stores all Sources'); 
 		$this->schema['chiron_source']['primary key'] = array('id');
+		$this->schema['chiron_source']['unique keys'] = array('url' => array('url'));
 		$this->schema['chiron_source']['mysql_engine'] = 'InnoDB';
 		$this->schema['chiron_source']['fields'] = array();
 
@@ -44,8 +45,8 @@ class chiron_db {
 
 		$this->schema['chiron_source']['fields']['url'] = array();
 		$this->schema['chiron_source']['fields']['url']['description'] = chiron_t('source url');
-		$this->schema['chiron_source']['fields']['url']['type'] = 'text';
-		$this->schema['chiron_source']['fields']['url']['size'] = 'normal';
+		$this->schema['chiron_source']['fields']['url']['type'] = 'varchar';
+		$this->schema['chiron_source']['fields']['url']['length'] = '255';
 
 		$this->schema['chiron_source']['fields']['status'] = array();
 		$this->schema['chiron_source']['fields']['status']['description'] = chiron_t('sources status');
@@ -197,6 +198,7 @@ class chiron_db {
 		$this->schema['chiron_item'] = array();
 		$this->schema['chiron_item']['description'] = chiron_t('Stores all Items'); 
 		$this->schema['chiron_item']['primary key'] = array('id');
+		$this->schema['chiron_item']['unique keys'] = array('url' => array('url'));
 		$this->schema['chiron_item']['mysql_engine'] = 'InnoDB';
 		$this->schema['chiron_item']['fields'] = array();
 
@@ -233,8 +235,8 @@ class chiron_db {
 
 		$this->schema['chiron_item']['fields']['url'] = array();
 		$this->schema['chiron_item']['fields']['url']['description'] = chiron_t('item url');
-		$this->schema['chiron_item']['fields']['url']['type'] = 'text';
-		$this->schema['chiron_item']['fields']['url']['size'] = 'normal';	
+		$this->schema['chiron_item']['fields']['url']['type'] = 'varchar';
+		$this->schema['chiron_item']['fields']['url']['size'] = '255';	
 		
 
 		// Table for Item Meta	
@@ -332,6 +334,11 @@ class chiron_db {
 			}
 		}
 		$query.=",constraint primary key (".implode(",", $data['primary key']).")";
+		if(isset($data['unique keys'])){
+			foreach($unique as $uni_id => $uni_fields){
+				$query.=",constraint ".$uni_id" unique (".implode(",", $$uni_fields).")";
+			}
+		}
 		$query.=") ";
 		$query.="ENGINE = ".$data['mysql_engine'];
 		return $query;

@@ -13,7 +13,7 @@ include 'subscription.class.php';
 include 'subscription.db-class.php';
 
 $chiron_db = new chiron_db(CHIRON_DB_SRV, CHIRON_DB_USR, CHIRON_DB_PWD, CHIRON_DB_DBS, CHIRON_DB_PRE);
-$chiron = new chiron_core($chrion_db);
+$chiron = new chiron_core($chiron_db);
 
 // Helper-Function for UTF8-Frakups
 // Checking wether a String is UTF8

@@ -10,12 +10,12 @@
 // First, like in all Implementations, get the Database Credentials
 global $table_prefix;
 
-define(CHIRON_DB_SRV, DB_HOST);
-define(CHIRON_DB_USR, DB_USER);
-define(CHIRON_DB_PWD, DB_PASSWORD);
-define(CHIRON_DB_DBS, DB_NAME);
-define(CHIRON_DB_PRE, $table_prefix);
-define(CHIRON_IMPLEMENTATION, "Wordpress");
+define("CHIRON_DB_SRV", DB_HOST);
+define("CHIRON_DB_USR", DB_USER);
+define("CHIRON_DB_PWD", DB_PASSWORD);
+define("CHIRON_DB_DBS", DB_NAME);
+define("CHIRON_DB_PRE", $table_prefix);
+define("CHIRON_IMPLEMENTATION", "Wordpress");
 
 // Get our precious Simplepie
 if ( !class_exists('SimplePie') and file_exists(ABSPATH . WPINC . '/class-simplepie.php')){
@@ -34,7 +34,7 @@ function chiron_t($str){
 		return t($str);	
 	}
 	if(function_exists('__')){
-		return __( $text, "chiron");
+		return __( $str, "chiron");
 	}	
 	return $str;
 }
@@ -81,7 +81,7 @@ function chiron_admin_head() {
 }
 
 // Only add the Favicon on "our" admin pages.
-if($_GET['page'] == 'chiron_dashboard'){
+if(isset($_GET['page']) and $_GET['page'] == 'chiron_dashboard'){
 	add_action('admin_head', 'chiron_admin_head');
 }
 
