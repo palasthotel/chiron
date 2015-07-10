@@ -9,40 +9,51 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 
-Chiron is a PHP based multi-user, multi-sources, multi-output, multi-cms News-Reader and Cross-Site-Networking Tool. 
+Chiron is a PHP based multi-user, multi-sources, multi-output, multi-cms News-Reader and Cross-Site-Networking Tool. And still beta!
 
 == Description ==
+  
+**CAUTION**
+
+The Plugin comes with own Database Tables and is currently considered not safe for production. PLEASE currently only use, when you are a Developer, who knows how to fix your Database! Thanks!
+
+**Chiron**
+
+Chiron is the Teacher of Heros and Heroines. It's a PHP based multi-user, multi-sources, multi-output, multi-cms News-Reader and Cross-Site-Networking Tool. It currently provides one-code-base-fits-all Integration for Wordpress. Drupal will follow soon, hopefully. 
+
+Development currently takes place on Github:
+https://github.com/palasthotel/chiron    
+   
+Feel free to contribute, add issues and support requests over there.  
+
+The WordPress Plugin has it's home over there:
+https://wordpress.org/plugins/chiron/
 
 
-## Chiron
+**References**
 
-Chiron is the Teacher of Heros and Heroines. It's a PHP based multi-user, multi-sources, multi-output, multi-cms News-Reader and Cross-Site-Networking Tool. It currently provides one-code-base-fits-all Integration for Wordpress. Drupal will follow soon, hopefully.
-
-
-## References
-
-### The Centaur
+**The Centaur**
 
 Find out more about the mythical Centaur.
 
 * https://en.wikipedia.org/wiki/Chiron
 
 
-### Simple-Pie
+**Simple-Pie**
 
 Chiron makes heavy use of Simple-Pie. Many thanks to all the Contributors over there.
 
 * http://simplepie.org/
 * https://github.com/simplepie/simplepie/
 
-### Wordpress
+**Wordpress**
 
-Chiron was first built to be used within the lovely Wordpress. If you're not familiar with it, got and try it yourself!
+Chiron was first built to be used within the lovely Wordpress. If you're not familiar with it, go and try it yourself!
 
 * http://wordpress.org/
 * http://wordpress.com/
 
-### Drupal
+**Drupal**
 
 Chiron will also available for the mighty mighty Drupal. Check it out, if you're looking for some serious CMS-Stuff.
 
@@ -73,6 +84,9 @@ Do something great with the rest of your time!
 We currently don't have an upgrade Notice for you.
 
 == Changelog ==
+
+= 0.9.f =
+* Changed url field to varchar and added unique key in tables item and source
 
 = 0.9g =
 * Added even more security and Updated readme.txt
