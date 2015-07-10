@@ -236,7 +236,7 @@ class chiron_db {
 		$this->schema['chiron_item']['fields']['url'] = array();
 		$this->schema['chiron_item']['fields']['url']['description'] = chiron_t('item url');
 		$this->schema['chiron_item']['fields']['url']['type'] = 'varchar';
-		$this->schema['chiron_item']['fields']['url']['size'] = '255';	
+		$this->schema['chiron_item']['fields']['url']['length'] = '255';	
 		
 
 		// Table for Item Meta	
@@ -335,8 +335,8 @@ class chiron_db {
 		}
 		$query.=",constraint primary key (".implode(",", $data['primary key']).")";
 		if(isset($data['unique keys'])){
-			foreach($unique as $uni_id => $uni_fields){
-				$query.=",constraint ".$uni_id." unique (".implode(",", $$uni_fields).")";
+			foreach($data['unique keys'] as $uni_id => $uni_fields){
+				$query.=", constraint unique ".$uni_id." (".implode(",", $uni_fields).")";
 			}
 		}
 		$query.=") ";
